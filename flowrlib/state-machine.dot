@@ -1,0 +1,44 @@
+digraph statemachine {
+    label="Runnables state machine";
+    labelloc=t; // Place label at top of chart
+    margin=0.4;
+    model=mds;
+
+    // States
+    { rank=source
+    "init" [style=filled, fillcolor=grey, label="INIT"];
+    }
+
+    "ready" [style=filled, fillcolor=white, label="READY"];
+    "running" [style=filled, fillcolor=green, label="RUNNING"];
+    "waiting" [style=filled, fillcolor=coral, label="WAITING\n(for inputs)"];
+    "blocked" [style=filled, fillcolor=coral, label="BLOCKED\n(on output)"];
+
+    { rank=sink
+    "dead" [style=filled, fillcolor=black, fontcolor=white, label="DEAD"];
+    }
+
+    // Transitions
+    // Transition variables: blocked, inputs_ready, run_again
+    // From "init"
+    "init" -> "ready" [labeldistance="3", label="!blocked && inputs_ready"];
+    "init" -> "blocked" [labeldistance="3", label="blocked && inputs_ready"];
+    "init" -> "waiting" [labeldistance="3", label="!inputs_ready"];
+
+    // from "ready"
+    "ready" -> "running" [labeldistance="3"];
+
+    // from "running"
+    "running" -> "dead" [labeldistance="3", label="!run_again"];
+    "running" -> "waiting" [labeldistance="3", label="run_again && !inputs_ready"];
+    "running" -> "blocked" [labeldistance="3", label="run_again && inputs_ready && blocked"];
+    "running" -> "ready" [labeldistance="3", label="run_again && inputs_ready && !blocked"];
+
+    // from "waiting"
+    "waiting" -> "blocked" [labeldistance="3", label="inputs_ready && blocked"];
+    "waiting" -> "ready" [labeldistance="3", label="inputs_ready && !blocked"];
+
+    // from "blocked"
+    "blocked" -> "ready" [labeldistance="3", label="!blocked"];
+
+} // close digraph

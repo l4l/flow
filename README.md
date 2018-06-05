@@ -9,6 +9,15 @@ Flow is a library and cli creation and execution of asynchronous, data-driven, p
 * UNIX pipes
 * Amoeba distributed OS by Andrew Tannenbaum that made a collaborating network of computers appear as one to the user of a "Workstation"
 * The transputer and it's Occam parallel programming language (which I studied at Univerity)
+* Yahoo Pipes!
+
+# Non-Inspirations
+This is a list of things I've heard about along the way and deliberately avoided learning more about, to avoid contaminating my ideas but
+also to avoid demotivating myself by finding out "it's been done already, nothing new here, move on"
+* Data flow programming
+* Tensor Flow (this was hard not to dive into)
+* C.A.R. Hoare - COmmunicating Sequential Processes (O.M.G. All my thoughts, reduced to algebra!!!)
+
 
 # Project Idea
 
@@ -70,6 +79,13 @@ Flow Descriptions
 
 Flows may have zero or more inputs, outputs, values (constants), functions, and other sub-flows.
 flow = [input] + [output] + [flow] + [values] + [functions]
+
+## Runtime semantics
+I have a lot to document here... but the basic idea is a "network" of independant "runnables" (functionr or values)
+than once inputs are available and not blocked on output by anothe rrunnable, can all run independently.
+
+Here is the finiate state machine for a given runnable:
+![alt text](flowrlib/state-machine.png "State Transition Diagram for Runnables")
 
 ## License
 
