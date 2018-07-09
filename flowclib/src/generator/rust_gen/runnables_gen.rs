@@ -14,14 +14,11 @@ const RUNNABLES_PREFIX: &'static str = "
 use flowrlib::runnable::Runnable;
 use flowrlib::implementation::Implementation;
 {value_used}
-{function_used}
-
-// Rust std library references
-use std::sync::{{Arc, Mutex}};\n";
+{function_used}\n";
 
 const GET_RUNNABLES: &'static str = "
-pub fn get_runnables() -> Vec<Arc<Mutex<Runnable>>> {{
-    let mut runnables = Vec::<Arc<Mutex<Runnable>>>::with_capacity({num_runnables});\n\n";
+pub fn get_runnables() -> Vec<&Runnable> {{
+    let mut runnables = Vec::<&Runnable>::with_capacity({num_runnables});\n\n";
 
 const RUNNABLES_SUFFIX: &'static str = "
     runnables
@@ -101,7 +98,7 @@ fn runnables(tables: &CodeGenTables) -> String {
 
     // Generate code for each of the runnables
     for runnable in &tables.runnables {
-        let run_str = format!("    runnables.push(Arc::new(Mutex::new({})));\n",
+        let run_str = format!("    runnables.push(&{});\n",
                               runnable_to_code(runnable));
         runnables_declarations.push_str(&run_str);
     }

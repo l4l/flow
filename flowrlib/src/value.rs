@@ -38,13 +38,11 @@ impl<'a> Value<'a> {
 }
 
 impl<'a> Runnable for Value<'a> {
-    fn name(&self) -> &str {
-        &self.name
-    }
-
-    fn number_of_inputs(&self) -> usize { self.number_of_inputs }
-
+    fn name(&self) -> &str { &self.name }
     fn id(&self) -> usize { self.id }
+    fn number_of_inputs(&self) -> usize { self.number_of_inputs }
+    fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> { &self.output_routes }
+    fn implementation(&self) -> &Implementation { self.implementation }
 
     /*
         If an initial value is defined then write it to the current value.
@@ -56,7 +54,7 @@ impl<'a> Runnable for Value<'a> {
             debug!("\t\tValue initialized by writing '{:?}' to input", &v);
             self.write_input(ONLY_INPUT, v);
         }
-        self.can_run()
+        self.inputs_ready()
     }
 
     /*
@@ -72,7 +70,7 @@ impl<'a> Runnable for Value<'a> {
     }
 
     // Responds true if all inputs have been satisfied and can be run - false otherwise
-    fn can_run(&self) -> bool {
+    fn inputs_ready(&self) -> bool {
         !self.value.is_null()
     }
 
@@ -85,12 +83,6 @@ impl<'a> Runnable for Value<'a> {
             vec!(vec!(self.value.take()))
         }
     }
-
-    fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> {
-        &self.output_routes
-    }
-
-    fn implementation(&self) -> &Implementation { self.implementation }
 }
 
 #[cfg(test)]

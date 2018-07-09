@@ -1,10 +1,9 @@
 use std::fs::File;
 use std::path::PathBuf;
 use std::io;
-use flowrlib::implementation::Implementation;
-use flowrlib::implementation::RunAgain;
-use flowrlib::runlist::RunList;
+use flowrlib::implementation::{Implementation, RunAgain, RUN_AGAIN};
 use flowrlib::runnable::Runnable;
+use std::sync::mpsc::Sender;
 use image::png::PNGEncoder;
 use image::ColorType;
 use serde_json::Value as JsonValue;
@@ -12,7 +11,7 @@ use serde_json::Value as JsonValue;
 pub struct WriteBitmap;
 
 impl Implementation for WriteBitmap {
-    fn run(&self, _runnable: &Runnable, mut inputs: Vec<Vec<JsonValue>>, _run_list: &mut RunList) -> RunAgain {
+    fn run(&self, _runnable: &Runnable, mut inputs: Vec<Vec<JsonValue>>, _tx: &Sender<(usize, JsonValue)>) -> RunAgain {
         let filename = inputs.remove(0).remove(0);
         let bytes = inputs.remove(0).remove(0);
         let bounds = inputs.remove(0).remove(0);
@@ -27,7 +26,7 @@ impl Implementation for WriteBitmap {
                      bytes.as_str().unwrap().as_bytes(),
                      (width, height)).unwrap();
 
-        true
+        RUN_AGAIN
     }
 }
 

@@ -1,32 +1,31 @@
 use serde_json::Value as JsonValue;
-use flowrlib::implementation::Implementation;
-use flowrlib::implementation::RunAgain;
-use flowrlib::runlist::RunList;
+use flowrlib::implementation::{Implementation, RunAgain, RUN_AGAIN};
 use flowrlib::runnable::Runnable;
+use std::sync::mpsc::Sender;
 
 pub struct ToString;
 
 impl Implementation for ToString {
-    fn run(&self, runnable: &Runnable, mut inputs: Vec<Vec<JsonValue>>, run_list: &mut RunList) -> RunAgain {
+    fn run(&self, runnable: &Runnable, mut inputs: Vec<Vec<JsonValue>>, tx: &Sender<(usize, JsonValue)>) -> RunAgain {
         let input = inputs.remove(0).remove(0);
         match input {
             JsonValue::String(_) => {
-                run_list.send_output(runnable, input);
+                runnable.send_output(tx, input);
             },
             JsonValue::Bool(boolean) => {
-                run_list.send_output(runnable, JsonValue::String(boolean.to_string()));
+                runnable.send_output(tx, JsonValue::String(boolean.to_string()));
             },
             JsonValue::Number(number) => {
-                run_list.send_output(runnable, JsonValue::String(number.to_string()));
+                runnable.send_output(tx, JsonValue::String(number.to_string()));
             },
             JsonValue::Array(array) => {
                 for entry in array {
-                    run_list.send_output(runnable,entry);
+                    runnable.send_output(tx,entry);
                 }
             },
             _ => {}
         };
 
-        true
+        RUN_AGAIN
     }
 }

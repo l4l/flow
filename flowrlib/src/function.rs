@@ -47,14 +47,14 @@ impl<'a> UnwindSafe for Function<'a> {}
 
 impl<'a> Runnable for Function<'a> {
     fn name(&self) -> &str { &self.name }
-
-    fn number_of_inputs(&self) -> usize { self.number_of_inputs }
-
     fn id(&self) -> usize { self.id }
+    fn number_of_inputs(&self) -> usize { self.number_of_inputs }
+    fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> { &self.output_routes }
+    fn implementation(&self) -> &Implementation { self.implementation }
 
     // If a function has zero inputs can be ready to run without receiving any input
     fn init(&mut self) -> bool {
-        self.can_run()
+        self.inputs_ready()
     }
 
     fn write_input(&mut self, input_number: usize, input_value: JsonValue) {
@@ -70,7 +70,7 @@ impl<'a> Runnable for Function<'a> {
     }
 
     // responds true if all inputs have been satisfied and this runnable can be run - false otherwise
-    fn can_run(&self) -> bool {
+    fn inputs_ready(&self) -> bool {
         for input in &self.inputs {
             if !input.full() {
                 return false;
@@ -87,10 +87,6 @@ impl<'a> Runnable for Function<'a> {
         }
         inputs
     }
-
-    fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> { &self.output_routes }
-
-    fn implementation(&self) -> &Implementation { self.implementation }
 }
 
 

@@ -14,6 +14,7 @@ const MAIN_PREFIX: &'static str = "
 extern crate serde_json;
 extern crate flowrlib;
 use flowrlib::startup::start;
+use flowrlib::runlist::RunListServer;
 use flowrlib::execution::execute;
 use std::process::exit;
 
@@ -24,7 +25,8 @@ use runnables::get_runnables;
 const MAIN_SUFFIX: &'static str = "
 fn main() {{
     start();
-    execute(get_runnables());
+    let (receiver, sender) = RunListServer::connect(get_runnables());
+    execute(receiver, sender);
     exit(0);
 }}
 ";
