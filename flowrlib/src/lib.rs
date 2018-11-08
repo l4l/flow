@@ -11,9 +11,8 @@ extern crate serde_json;
 extern crate simplog;
 extern crate clap;
 
-
 pub mod info;
-pub mod execution;
+pub mod executor;
 pub mod startup;
 pub mod runlist;
 pub mod value;

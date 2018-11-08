@@ -1,5 +1,7 @@
 use serde_json::Value as JsonValue;
 use runnable::Runnable;
+use runnable::RunnableState;
+use runnable::RunnableState::Init;
 use implementation::Implementation;
 
 const ONLY_INPUT: usize = 0;
@@ -13,6 +15,8 @@ pub struct Value<'a> {
     implementation: &'a Implementation,
     value: JsonValue,
     output_routes: Vec<(&'static str, usize, usize)>,
+    blocked_on_output: bool,
+    state: RunnableState,
 }
 
 impl<'a> Value<'a> {
@@ -33,6 +37,8 @@ impl<'a> Value<'a> {
             implementation,
             value: JsonValue::Null,
             output_routes,
+            blocked_on_output: false,
+            state: Init
         }
     }
 }
@@ -43,6 +49,7 @@ impl<'a> Runnable for Value<'a> {
     fn number_of_inputs(&self) -> usize { self.number_of_inputs }
     fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> { &self.output_routes }
     fn implementation(&self) -> &Implementation { self.implementation }
+    fn get_state(&self) -> &RunnableState { &self.state }
 
     /*
         If an initial value is defined then write it to the current value.
@@ -83,6 +90,10 @@ impl<'a> Runnable for Value<'a> {
             vec!(vec!(self.value.take()))
         }
     }
+
+    fn blocked_on_output(&self) -> bool { self.blocked_on_output }
+
+    fn set_state(&mut self, new_state: RunnableState) { self.state = new_state }
 }
 
 #[cfg(test)]

@@ -1,5 +1,7 @@
 use serde_json::Value as JsonValue;
 use runnable::Runnable;
+use runnable::RunnableState;
+use runnable::RunnableState::Init;
 use implementation::Implementation;
 use std::panic::RefUnwindSafe;
 use std::panic::UnwindSafe;
@@ -12,6 +14,8 @@ pub struct Function<'a> {
     implementation: &'a Implementation,
     inputs: Vec<Input>,
     output_routes: Vec<(&'static str, usize, usize)>,
+    blocked_on_output: bool,
+    state: RunnableState,
 }
 
 impl<'a> Function<'a> {
@@ -31,6 +35,8 @@ impl<'a> Function<'a> {
             implementation,
             inputs: Vec::with_capacity(number_of_inputs),
             output_routes,
+            blocked_on_output: false,
+            state: Init
         };
 
         for input_depth in input_depths {
@@ -51,6 +57,7 @@ impl<'a> Runnable for Function<'a> {
     fn number_of_inputs(&self) -> usize { self.number_of_inputs }
     fn output_destinations(&self) -> &Vec<(&'static str, usize, usize)> { &self.output_routes }
     fn implementation(&self) -> &Implementation { self.implementation }
+    fn get_state(&self) -> &RunnableState { &self.state }
 
     // If a function has zero inputs can be ready to run without receiving any input
     fn init(&mut self) -> bool {
@@ -87,6 +94,10 @@ impl<'a> Runnable for Function<'a> {
         }
         inputs
     }
+
+    fn blocked_on_output(&self) -> bool { self.blocked_on_output }
+
+    fn set_state(&mut self, new_state: RunnableState) { self.state = new_state }
 }
 
 

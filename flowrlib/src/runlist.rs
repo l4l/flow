@@ -1,12 +1,12 @@
 use runnable::Runnable;
-use std::collections::HashSet;
+use runnable::RunnableState;
 use std::fmt;
 use std::time::Instant;
 use serde_json::Value as JsonValue;
-use std::thread;
 use std::sync::mpsc::{Sender, Receiver};
-use std::sync::mpsc;
 use implementation::Implementation;
+use implementation::RunAgainOption;
+use implementation::RunAgainOption::{RunAgain, DontRunAgain};
 use runnable::RunnableID;
 
 pub struct Metrics {
@@ -14,6 +14,31 @@ pub struct Metrics {
     dispatches: u32,
     outputs_sent: u32,
     start_time: Instant,
+}
+
+enum RunnableEvent {
+    InitReady,
+    // Has been initialized and is now ready to run
+    InitNeedsInput,
+    // Has been initiatized but needs input in order to be able to run
+    DoneDead,
+    // Done running, but doesn't want to run again
+    DoneBlocked,
+    // Done running, is blocked on output from running again
+    DoneWaiting,
+    // Done running, needs input in order to run again
+    DoneReady,
+    // Done running, has input and can output so can run again
+    Dispatched,
+    // Sent to be run
+    Unblocked,
+    // Was blocked but now output was freed
+    InputNotBlocked,
+    // Inputs became ready, not blocked on output
+    InputBlocked,
+    // Inputs became ready, blocked on output
+    OutputSent,
+    // Runnable sent an output but continues to run
 }
 
 impl Metrics {
@@ -48,38 +73,36 @@ impl fmt::Display for Metrics {
     runnables:
     A list of all the runnables that could be executed at some point.
 
-    inputs_satisfied:
-    A list of runnables who's inputs are satisfied.
+    ready:
+    A list of runnables who's inputs are ready to be dispatched.
 
     blocking:
     A list of tuples of runnable ids where first id is id of the runnable data is trying to be sent
     to, and the second id is the id of the runnable trying to send data.
-
-    ready:
-    A list of Runnables who are ready to be run, they have their inputs satisfied and they are not
-    blocked on the output (so their output can be produced).
 */
 pub struct RunList<'a> {
     runnables: Vec<&'a mut Runnable>,
-    can_run: HashSet<RunnableID>,
+    ready: Vec<RunnableID>,
     blocking: Vec<(RunnableID, RunnableID)>,
     // blocking_id, blocked_id
     metrics: Metrics,
     sender: Sender<RunSet<'a>>,
-    receiver: Receiver<OutputSet>
+    receiver: Receiver<OutputSet>,
 }
 
 // Set of information needed to run an implementation
 pub struct RunSet<'a> {
     pub id: RunnableID,
     pub implementation: &'a Implementation,
-    pub inputs: Vec<Vec<JsonValue>>
+    pub inputs: Vec<Vec<JsonValue>>,
 }
 
 // Set of information output by an Implementation
 pub struct OutputSet {
-    from: RunnableID,
-    output: JsonValue
+    pub from: RunnableID,
+    pub output: JsonValue,
+    pub done: bool,
+    pub run_again: RunAgainOption,
 }
 
 impl<'a> RunList<'a> {
@@ -87,11 +110,11 @@ impl<'a> RunList<'a> {
         let len = runnables.len();
         RunList {
             runnables,
-            can_run: HashSet::<RunnableID>::new(),
+            ready: Vec::<RunnableID>::new(),
             blocking: Vec::<(RunnableID, RunnableID)>::new(),
             metrics: Metrics::new(len),
             sender,
-            receiver
+            receiver,
         }
     }
 
@@ -100,12 +123,15 @@ impl<'a> RunList<'a> {
         The `init` method returns a boolean to indicate that it's inputs are fulfilled (or not).
         This information is added to the RunList to control the readyness of  the Runnable to be executed.
     */
-    fn init(&'a mut self) {
+    fn init(&mut self) {
         debug!("Initializing runnables in the runlist");
-        for mut runnable in &mut self.runnables {
-            debug!("\tInitializing runnable #{} '{}'", &runnable.id(), runnable.name());
-            if runnable.init() {
-                self.inputs_ready(runnable.id());
+        for runnable in &mut self.runnables {
+            debug!("\tInitializing runnable #{} '{}'", runnable.id(), runnable.name());
+
+            if runnable.init() { // Inputs are ready
+                runnable.set_state(RunnableState::Ready);
+            } else {
+                runnable.set_state(RunnableState::Waiting);
             }
         }
     }
@@ -115,53 +141,52 @@ impl<'a> RunList<'a> {
     */
     fn debug(&self) {
         debug!("Dispatch count: {}", self.metrics.dispatches);
-        debug!("       Can Run: {:?}", self.can_run);
+        debug!("         Ready: {:?}", self.ready);
         debug!("      Blocking: {:?}", self.blocking);
         debug!("-------------------------------------");
     }
 
     /*
-        Call this when a flow ends to print out metrics related to it's execution
+        Call this when a flow ends, to print out metrics related to its execution
     */
     fn flow_end(&self) {
         self.debug();
         debug!("Metrics: \n {}", self.metrics);
     }
 
-    fn get(&'a mut self, id: RunnableID) -> &'a Runnable {
-        self.runnables[id]
-    }
-
-    fn done(&'a mut self, id: RunnableID, run_again: bool) {
-        // if it wants to run again and it can (inputs ready) then add back to the Can Run list
-        if run_again && self.get(id).inputs_ready() {
-            self.inputs_ready(id);
-        }
+    /*
+        Get a mutable reference to a Runnable based on it's id (index in the runnables array)
+    */
+    fn get(&mut self, id: RunnableID) -> &mut Runnable {
+        *(self.runnables.get_mut(id).unwrap())
     }
 
     /*
-        Save the fact that a particular Runnable's inputs are now satisfied and so it maybe ready
-        to run (if not blocked sending on it's output)
+        Take the next ready runnable (id) off the ready list and return it
     */
-    fn inputs_ready(&'a mut self, id: RunnableID) {
+    pub fn next(&mut self) -> Option<RunnableID> {
+        self.ready.pop()
+    }
+
+    /*
+        Register the event produced by a Runnable's inputs being ready
+    */
+    fn inputs_ready(&mut self, id: RunnableID) {
         debug!("\t\t\tRunnable #{} inputs are ready", id);
-        self.can_run.insert(id);
-
-        if !self.is_blocked(id) {
-            self.dispatch(id);
+        let event;
+        if self.is_blocked(id) {
+            event = RunnableEvent::InputBlocked;
+        } else {
+            event = RunnableEvent::Unblocked;
         }
+
+        self.event(id, event);
     }
 
     /*
-        When a runnable consumes it's inputs, then take if off the list of runnables with inputs ready
-        until new inputs are sent later and it is added again
+        Save the fact that the runnable 'blocked_id' is blocked on it's output by 'blocking_id'
     */
-    fn inputs_consumed(&mut self, id: RunnableID) {
-        debug!("\tRunnable #{} consumed its inputs, removing from the 'Can Run' list", id);
-        self.can_run.remove(&id);
-    }
-
-    // Save the fact that the runnable 'blocked_id' is blocked on it's output by 'blocking_id'
+    // ADM TODO make this a state transition to blocked on output?
     fn blocked_by(&mut self, blocking_id: RunnableID, blocked_id: RunnableID) {
         // avoid deadlocks by a runnable blocking itself
         if blocked_id != blocking_id {
@@ -170,32 +195,56 @@ impl<'a> RunList<'a> {
         }
     }
 
-    // unblock all runnables that were blocked trying to send to blocker_id by removing all entries
-    // in the list where the first value (blocking_id) matches the destination_id
-    // when each is unblocked on output, if it's inputs are satisfied, then it is ready to be run
-    // again, so put it on the ready queue
-    fn unblock_senders_to(&'a mut self, blocker_id: RunnableID) {
+    /*
+        for all runnables that were blocked trying to send to blocker_id, send unblocked event
+        remove entries in the blocking list where the blocking_id matches the blocker_id
+    */
+    fn unblock_senders_to(&mut self, blocker_id: RunnableID) {
         if !self.blocking.is_empty() {
             let mut unblocked_list: Vec<RunnableID> = vec!();
 
+            // TODO optimize this like is_blocked() needs
             for &(blocking_id, blocked_id) in &self.blocking {
                 if blocking_id == blocker_id {
-                    debug!("\t\tRunnable #{} <-- #{} - block removed", blocking_id, blocked_id);
+                    debug!("\t\tRunnable #{} <-- #{} - removing block", blocking_id, blocked_id);
                     unblocked_list.push(blocked_id);
                 }
             }
 
-            // when done remove all entries from the blocking list where it was this blocker_id
+            // remove all entries from the blocking list with this blocker_id as they will be unblocked
             self.blocking.retain(|&(blocking_id, _blocked_id)| blocking_id != blocker_id);
 
-            // see if any of the runnables unblocked should be dispatched
-            // (they could be blocked on others not the one that unblocked)
-            for unblocked in unblocked_list {
-                if self.can_run.contains(&unblocked) && !self.is_blocked(unblocked) {
-                    self.dispatch(unblocked);
-                }
+            // for all the runnables previously blocked, and now are unblocked, send unblocked event
+//            for unblocked in unblocked_list {
+            // TODO solve problem of calling this in a loop
+//                self.event(unblocked, RunnableEvent::Unblocked);
+//            }
+        }
+    }
+
+    /*
+        An event has occurred related to runnable with RunnableID 'id'
+        Take the actions necessary related to the state transition, calculate the new state
+        and set the runnable to that new state.
+    */
+    fn event(&mut self, id: RunnableID, event: RunnableEvent) {
+        {
+            match event {
+                RunnableEvent::DoneReady => self.ready.push(id),
+                RunnableEvent::InitReady => self.ready.push(id),
+                RunnableEvent::DoneDead => debug!("\tRunnable #{} completed", id),
+                RunnableEvent::Dispatched => self.unblock_senders_to(id),
+                _ => {}
             }
         }
+
+        let runnable = self.get(id);
+        let new_state;
+        {
+            let _current_state = runnable.get_state();
+            new_state = RunnableState::Init; // TODO calculate new state
+        }
+        runnable.set_state(new_state);
     }
 
     /*
@@ -205,22 +254,24 @@ impl<'a> RunList<'a> {
             - get the implementation to run on those inputs
             - send the id, implementation and inputs on the channel for dispatching
     */
-    fn dispatch(&'a mut self, id: RunnableID) {
+    pub fn dispatch(&mut self, id: RunnableID) {
         let mut runnable = self.get(id);
         let inputs = runnable.get_inputs();
-        self.inputs_consumed(id);
-        self.unblock_senders_to(id);
-
         let implementation = runnable.implementation();
+        self.event(id, RunnableEvent::Dispatched);
 
+        self.sender.send(RunSet { id, implementation, inputs });
+        // Send the runset to an executor to be run
         debug!("Runnable #{} '{}' dispatched with inputs: {:?}", id, runnable.name(), inputs);
+
         self.metrics.dispatches += 1;
-        self.sender.send(RunSet{id, implementation, inputs});
     }
 
-    // TODO ADM optimize this by also having a flag in the runnable?
-    // Or use the blocked_id as a key to a HashSet?
-    // See if there is any tuple in the vector where the second (blocked_id) is the one we're after
+    // TODO ADM change this to just check the current state - as an optimization
+// Or use the blocked_id as a key to a HashSet?
+    /*
+        See if a runnable is blocked on output
+    */
     fn is_blocked(&self, id: RunnableID) -> bool {
         for &(_blocking_id, blocked_id) in &self.blocking {
             if blocked_id == id {
@@ -229,77 +280,53 @@ impl<'a> RunList<'a> {
         }
         false
     }
-}
-
-/*
-    For now the server will only execute one RunList in one thread, locally
-*/
-pub struct RunListServer<'a> {
-    sender: Sender<RunSet<'a>>,
-    receiver: Receiver<OutputSet>,
-}
-
-impl<'a> RunListServer<'a> {
-    /*
-        This function:
-        - creates a new runlist with the vector of runnables
-        - initialized each runnable
-        - starts a RunList server thread that loops infinitely receiving outputs sent from runnables
-        implementations, then processing those outputs.
-
-        This function must correctly prepare the run_list before starting the server (on another thread)
-        to serve RunSets.
-    */
-    pub fn connect(runnables: Vec<&'a mut Runnable>) -> (Receiver<RunSet>,
-                                                      Sender<OutputSet>) {
-        let (runset_tx, runset_rx): (Sender<RunSet<'a>>, Receiver<RunSet<'a>>) = mpsc::channel();
-        let (output_tx, output_rx): (Sender<OutputSet>, Receiver<OutputSet>) = mpsc::channel();
-        let mut run_list = RunList::new(runset_tx, output_rx, runnables);
-        run_list.init();
-
-        thread::spawn(move || Self::receiver_loop(run_list) );
-
-        (runset_rx, output_tx)
-    }
 
     /*
-        Loop forever receiving OutputSets from running implementations and processing them
+        - receive the output set sent from a running runnable on another thread via the channel
+        - send the output to all destination IOs on runnables it should be sent to
+        - mark the source runnable as blocked because those others must consume the output // TODO
+        - update state of other runnables the outputs have  been sent to
     */
-    fn receiver_loop(mut run_list: RunList<'a>) {
-        loop {
-            let output_set = run_list.receiver.recv().unwrap();
-            Self::process_output_set(&mut run_list, output_set);
-        }
-    }
-
-    /*
-        Then take the output and send it to all destination IOs on different runnables it should be
-        sent to, marking the source runnable as blocked because those others must consume the output
-        if those other runnables have all their inputs, then mark them accordingly.
-    */
-    fn process_output_set(run_list: &'a mut  RunList<'a>, output_set: OutputSet) {
-        let runnable = run_list.get(output_set.from);
+    fn process_output_set(&mut self, output_set: OutputSet) {
+        let runnable = self.get(output_set.from);
 
         for &(output_route, destination_id, io_number) in runnable.output_destinations() {
-            let mut destination = run_list.get(destination_id);
+            let destination = self.get(destination_id);
             let output_value = output_set.output.pointer(output_route).unwrap();
             debug!("\t\tRunnable #{} '{}{}' sending output '{}' to Runnable #{} '{}' input #{}",
                    runnable.id(), runnable.name(), output_route, output_value, &destination_id,
                    destination.name(), &io_number);
             destination.write_input(io_number, output_value.clone());
-            run_list.metrics.outputs_sent += 1;
+            self.metrics.outputs_sent += 1;
+
             if destination.input_full(io_number) {
-                run_list.blocked_by(destination_id, output_set.from);
+                self.blocked_by(destination_id, output_set.from);
             }
 
             if destination.inputs_ready() {
-                run_list.inputs_ready(destination_id);
+                self.inputs_ready(destination_id);
             }
         }
 
-        // TODO consider special output to signal end?
-        // Maybe when running as a thread just detect death of thread and print this then
-        //debug!("\tRunnable #{} '{}' completed", id, runnable.name());
+        // ADM TODO get this from the output set and update the status of the runnable
+        let mut event = RunnableEvent::OutputSent;
+
+        if output_set.done {
+            match output_set.run_again {
+                RunAgain => {
+                    if self.get(output_set.from).inputs_ready() {
+                        if self.is_blocked(output_set.from) {
+                            event = RunnableEvent::DoneBlocked
+                        } else {
+                            event = RunnableEvent::DoneReady;
+                        }
+                    }
+                }
+                DontRunAgain => event = RunnableEvent::DoneDead,
+            }
+        }
+
+        self.event(output_set.from, event);
     }
 }
 
@@ -307,9 +334,11 @@ impl<'a> RunListServer<'a> {
 mod tests {
     use super::{RunList, RunSet};
     use super::Runnable;
+    use runnable::RunnableState;
+    use runnable::RunnableState::Init;
     use serde_json;
     use serde_json::Value as JsonValue;
-    use super::super::implementation::{Implementation, RunAgain, RUN_AGAIN};
+    use super::super::implementation::{Implementation, RunAgainOption::RunAgain};
     use super::OutputSet;
     use super::RunnableID;
     use std::sync::mpsc::{Sender, Receiver};
@@ -318,13 +347,12 @@ mod tests {
     struct TestImplementation;
 
     impl Implementation for TestImplementation {
-        fn run(&self, id: RunnableID, inputs: Vec<Vec<JsonValue>>, tx: Sender<OutputSet>) -> RunAgain {
-            // get the input value
+        fn run(&self, id: RunnableID, inputs: Vec<Vec<JsonValue>>, tx: &Sender<OutputSet>) {
+// get the input value
             let input = inputs.get(0).unwrap().get(0).unwrap().clone();
 
-            // Send the input directly as the output
-            self.send_output(id, &tx, input);
-            RUN_AGAIN
+// Send the input directly as the output
+            self.send_output(id, &tx, input, true /* done */, RunAgain);
         }
     }
 
@@ -333,6 +361,8 @@ mod tests {
         number_of_inputs: usize,
         destinations: Vec<(&'static str, RunnableID, usize)>,
         implementation: &'a Implementation,
+        blocked_on_output: bool,
+        state: RunnableState,
     }
 
     impl<'a> TestRunnable<'a> {
@@ -342,14 +372,20 @@ mod tests {
                 number_of_inputs,
                 destinations,
                 implementation: &TestImplementation,
+                blocked_on_output: false,
+                state: Init,
             }
         }
     }
 
     impl<'a> Runnable for TestRunnable<'a> {
         fn name(&self) -> &str { "TestRunnable" }
-        fn number_of_inputs(&self) -> usize { self.number_of_inputs }
         fn id(&self) -> RunnableID { self.id }
+        fn number_of_inputs(&self) -> usize { self.number_of_inputs }
+        fn output_destinations(&self) -> &Vec<(&'static str, RunnableID, RunnableID)> { &self.destinations }
+        fn implementation(&self) -> &Implementation { self.implementation }
+        fn get_state(&self) -> &RunnableState { &self.state }
+
         fn init(&mut self) -> bool { false }
         fn write_input(&mut self, _input_number: usize, _new_value: JsonValue) {}
         fn input_full(&self, _input_number: usize) -> bool { true }
@@ -357,13 +393,13 @@ mod tests {
         fn get_inputs(&mut self) -> Vec<Vec<JsonValue>> {
             vec!(vec!(serde_json::from_str("Input").unwrap()))
         }
-        fn output_destinations(&self) -> &Vec<(&'static str, RunnableID, RunnableID)> { &self.destinations }
-        fn implementation(&self) -> &Implementation { self.implementation }
+        fn blocked_on_output(&self) -> bool { self.blocked_on_output }
+        fn set_state(&mut self, new_state: RunnableState) { self.state = new_state }
     }
 
     fn test_run_list(runnables: Vec<&mut Runnable>) -> RunList {
-        let (runset_tx, runset_rx): (Sender<RunSet>, Receiver<RunSet>) = mpsc::channel();
-        let (output_tx, output_rx): (Sender<OutputSet>, Receiver<OutputSet>) = mpsc::channel();
+        let (runset_tx, _runset_rx): (Sender<RunSet>, Receiver<RunSet>) = mpsc::channel();
+        let (_output_tx, output_rx): (Sender<OutputSet>, Receiver<OutputSet>) = mpsc::channel();
         let mut run_list = RunList::new(runset_tx, output_rx, runnables);
         run_list.init();
         run_list
@@ -376,7 +412,7 @@ mod tests {
         let runnables = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable);
         let mut run_list = test_run_list(runnables);
 
-        // Indicate that 0 is blocked by 1
+// Indicate that 0 is blocked by 1
         run_list.blocked_by(1, 0);
         assert!(run_list.is_blocked(0));
     }
@@ -397,9 +433,9 @@ mod tests {
         let mut r1 = TestRunnable::new(1, 1, vec!());
         let mut r2 = TestRunnable::new(2, 1, vec!());
         let runnables = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable, &mut r2 as &mut Runnable);
-        let mut run_list = test_run_list(runnables);
+        let mut _run_list = test_run_list(runnables);
 
-        // TODO peek into channel to see or try a get without timeout?
+// TODO peek into channel to see or try a get without timeout?
 //        assert!(runs.next().is_none());
     }
 
@@ -411,10 +447,10 @@ mod tests {
         let runnables = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable, &mut r2 as &mut Runnable);
         let mut run_list = test_run_list(runnables);
 
-        // Indicate that 0 has all it's inputs read
+// Indicate that 0 has all it's inputs read
         run_list.inputs_ready(0);
 
-        // TODO get from channel?
+// TODO get from channel?
 //        assert_eq!(runs.next().unwrap(), 0);
     }
 
@@ -426,13 +462,13 @@ mod tests {
         let runnables = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable, &mut r2 as &mut Runnable);
         let mut run_list = test_run_list(runnables);
 
-        // Indicate that 0 is blocked by 1
+// Indicate that 0 is blocked by 1
         run_list.blocked_by(1, 0);
 
-        // Indicate that 0 has all it's inputs read
+// Indicate that 0 has all it's inputs read
         run_list.inputs_ready(0);
 
-        // TODO peek into channel to see or try a get without timeout?
+// TODO peek into channel to see or try a get without timeout?
         /*
         match run_list.next() {
             None => assert!(true),
@@ -449,20 +485,20 @@ mod tests {
         let runnables = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable, &mut r2 as &mut Runnable);
         let mut run_list = test_run_list(runnables);
 
-        // Indicate that 0 is blocked by 1
+// Indicate that 0 is blocked by 1
         run_list.blocked_by(1, 0);
 
-        // Indicate that 0 has all it's inputs read
+// Indicate that 0 has all it's inputs read
         run_list.inputs_ready(0);
 
-        // TODO peek into channel to see or try a get without timeout?
+// TODO peek into channel to see or try a get without timeout?
 //        assert_eq!(runs.next(), None);
 
-        // now unblock 0 by 1
+// now unblock 0 by 1
         run_list.unblock_senders_to(1);
 
-        // Now runnable with id 0 should be ready and served up by next
-        // TODO peek into channel to see or try a get without timeout?
+// Now runnable with id 0 should be ready and served up by next
+// TODO peek into channel to see or try a get without timeout?
 //        assert_eq!(runs.next(), Some(0));
     }
 
@@ -473,7 +509,7 @@ mod tests {
         let mut r2 = TestRunnable::new(2, 1, vec!());
         let runnables: Vec<&mut Runnable> = vec!(&mut r0 as &mut Runnable, &mut r1 as &mut Runnable, &mut r2 as &mut Runnable);
 
-        let mut run_list = test_run_list(runnables);
+        let run_list = &mut test_run_list(runnables);
 
         // Indicate that 0 is blocked by 1 and 2
         run_list.blocked_by(1, 0);
@@ -482,14 +518,12 @@ mod tests {
         // Indicate that 0 has all it's inputs read
         run_list.inputs_ready(0);
 
-        // TODO peek into channel to see or try a get without timeout?
-//        assert_eq!(run_list.next(), None);
+        assert_eq!(run_list.next(), None);
 
         // now unblock 0 by 1
         run_list.unblock_senders_to(1);
 
         // Now runnable with id 0 should still not be ready as still blocked on 2
-        // TODO peek into channel to see or try a get without timeout?
-//        assert_eq!(run_list.next(), None);
+        assert_eq!(run_list.next(), None);
     }
 }
