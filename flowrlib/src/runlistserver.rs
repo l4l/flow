@@ -1,4 +1,3 @@
-use runnable::Runnable;
 use std::fmt;
 use std::time::Instant;
 use serde_json::Value as JsonValue;
@@ -6,7 +5,7 @@ use std::thread;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
 use implementation::Implementation;
-use runnable::RunnableID;
+use runnable::{Runnable, RunnableID};
 use runlist::{RunSet, OutputSet, RunList};
 use executor::executor;
 
