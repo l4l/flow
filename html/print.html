@@ -1,0 +1,1660 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The `flow` Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A guide to what 'flow' is and how to use it">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">var path_to_root = "";</script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { } 
+            if (theme === null || theme === undefined) { theme = 'light'; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <ol class="chapter"><li class="affix"><a href="welcome.html">Welcome!</a></li><li class="spacer"></li><li><a href="introduction/introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li><a href="introduction/what_is_flow.html"><strong aria-hidden="true">1.1.</strong> What is flow</a></li><li><a href="introduction/components.html"><strong aria-hidden="true">1.2.</strong> Components</a></li><li><a href="introduction/inspirations.html"><strong aria-hidden="true">1.3.</strong> The Inspirations for flow</a></li><li><a href="introduction/non_inspirations.html"><strong aria-hidden="true">1.4.</strong> Non-Inspirations</a></li><li><a href="introduction/status.html"><strong aria-hidden="true">1.5.</strong> Status</a></li><li><a href="introduction/flow_programming.html"><strong aria-hidden="true">1.6.</strong> Flow Programming</a></li></ol></li><li><a href="first_flow/first_flow.html"><strong aria-hidden="true">2.</strong> Your First Flow</a></li><li><ol class="section"><li><a href="first_flow/understanding.html"><strong aria-hidden="true">2.1.</strong> Understanding it</a></li><li><a href="first_flow/implementation.html"><strong aria-hidden="true">2.2.</strong> Real Implementation</a></li><li><a href="first_flow/step-by-step.html"><strong aria-hidden="true">2.3.</strong> Step-by-Step</a></li><li><a href="first_flow/debugging.html"><strong aria-hidden="true">2.4.</strong> Debugging your first flow</a></li></ol></li><li><a href="describing/definition_overview.html"><strong aria-hidden="true">3.</strong> Describing Flows</a></li><li><ol class="section"><li><a href="describing/names.html"><strong aria-hidden="true">3.1.</strong> Names</a></li><li><a href="describing/ios.html"><strong aria-hidden="true">3.2.</strong> Flow IOs</a></li><li><a href="describing/process_references.html"><strong aria-hidden="true">3.3.</strong> Process References</a></li><li><a href="describing/value_definitions.html"><strong aria-hidden="true">3.4.</strong> Value Definitions</a></li><li><a href="describing/function_definitions.html"><strong aria-hidden="true">3.5.</strong> Function Definitions</a></li><li><a href="describing/types.html"><strong aria-hidden="true">3.6.</strong> Types</a></li><li><a href="describing/connections.html"><strong aria-hidden="true">3.7.</strong> Connections</a></li><li><a href="describing/io_references.html"><strong aria-hidden="true">3.8.</strong> IO References</a></li><li><a href="describing/features.html"><strong aria-hidden="true">3.9.</strong> Complete Feature List</a></li><li><a href="describing/flow_libraries.html"><strong aria-hidden="true">3.10.</strong> Flow Libraries</a></li></ol></li><li><a href="running/running.html"><strong aria-hidden="true">4.</strong> Running flows</a></li><li><ol class="section"><li><a href="running/flowc.html"><strong aria-hidden="true">4.1.</strong> flowc Command Line Arguments</a></li><li><a href="running/arguments.html"><strong aria-hidden="true">4.2.</strong> Passing command line arguments to flows</a></li><li><a href="running/context_selection.html"><strong aria-hidden="true">4.3.</strong> Selecting the Context file</a></li><li><a href="running/stdio.html"><strong aria-hidden="true">4.4.</strong> Standard Input and Output</a></li><li><a href="running/panics.html"><strong aria-hidden="true">4.5.</strong> Exceptions and Panics</a></li></ol></li><li><a href="samples/overview.html"><strong aria-hidden="true">5.</strong> Samples</a></li><li><ol class="section"><li><a href="samples/first/DESCRIPTION.html"><strong aria-hidden="true">5.1.</strong> first sample</a></li><li><a href="samples/echo/DESCRIPTION.html"><strong aria-hidden="true">5.2.</strong> echo sample</a></li><li><a href="samples/fibonacci/DESCRIPTION.html"><strong aria-hidden="true">5.3.</strong> fibonacci sample</a></li><li><a href="samples/hello-world-include/DESCRIPTION.html"><strong aria-hidden="true">5.4.</strong> hello-world-include sample</a></li><li><a href="samples/hello-world-simple/DESCRIPTION.html"><strong aria-hidden="true">5.5.</strong> hello-world-simple sample</a></li><li><a href="samples/hello-world/DESCRIPTION.html"><strong aria-hidden="true">5.6.</strong> hello-world sample</a></li><li><a href="samples/line-echo/DESCRIPTION.html"><strong aria-hidden="true">5.7.</strong> line-echo sample</a></li></ol></li><li><a href="flowstdlib/flowstdlib.html"><strong aria-hidden="true">6.</strong> The flow standard library</a></li><li><ol class="section"><li><a href="flowstdlib/src/control/control.html"><strong aria-hidden="true">6.1.</strong> Control functions</a></li><li><ol class="section"><li><a href="flowstdlib/src/control/tap.html"><strong aria-hidden="true">6.1.1.</strong> Tap function</a></li><li><a href="flowstdlib/src/control/compare.html"><strong aria-hidden="true">6.1.2.</strong> Compare function</a></li></ol></li><li><a href="flowstdlib/src/fmt/fmt.html"><strong aria-hidden="true">6.2.</strong> Formatting Functions</a></li><li><ol class="section"><li><a href="flowstdlib/src/fmt/to_number.html"><strong aria-hidden="true">6.2.1.</strong> To Number function</a></li><li><a href="flowstdlib/src/fmt/to_string.html"><strong aria-hidden="true">6.2.2.</strong> To String function</a></li></ol></li><li><a href="flowstdlib/src/img/img.html"><strong aria-hidden="true">6.3.</strong> Image Functions</a></li><li><ol class="section"><li><a href="flowstdlib/src/img/format_png.html"><strong aria-hidden="true">6.3.1.</strong> Format PNG function</a></li></ol></li><li><a href="flowstdlib/src/math/math.html"><strong aria-hidden="true">6.4.</strong> Math Functions</a></li><li><ol class="section"><li><a href="flowstdlib/src/math/add.html"><strong aria-hidden="true">6.4.1.</strong> Add function</a></li><li><a href="flowstdlib/src/math/subtract.html"><strong aria-hidden="true">6.4.2.</strong> Subtract function</a></li><li><a href="flowstdlib/src/math/divide.html"><strong aria-hidden="true">6.4.3.</strong> Divide function</a></li></ol></li></ol></li><li><a href="flowr/flowr.html"><strong aria-hidden="true">7.</strong> The flow runtime library</a></li><li><ol class="section"><li><a href="flowr/src/args/args.html"><strong aria-hidden="true">7.1.</strong> Arg functions</a></li><li><ol class="section"><li><a href="flowr/src/args/get.html"><strong aria-hidden="true">7.1.1.</strong> Arg get function</a></li></ol></li><li><a href="flowr/src/file/file.html"><strong aria-hidden="true">7.2.</strong> File functions</a></li><li><ol class="section"><li><a href="flowr/src/file/file_write.html"><strong aria-hidden="true">7.2.1.</strong> File Write function</a></li></ol></li><li><a href="flowr/src/stdio/stdio.html"><strong aria-hidden="true">7.3.</strong> Standard IO functions</a></li><li><ol class="section"><li><a href="flowr/src/stdio/readline.html"><strong aria-hidden="true">7.3.1.</strong> Readlin function</a></li><li><a href="flowr/src/stdio/stdin.html"><strong aria-hidden="true">7.3.2.</strong> Standard Input function</a></li><li><a href="flowr/src/stdio/stdout.html"><strong aria-hidden="true">7.3.3.</strong> Standard Output function</a></li><li><a href="flowr/src/stdio/stderr.html"><strong aria-hidden="true">7.3.4.</strong> Standard Error function</a></li></ol></li></ol></li><li><a href="developing/overview.html"><strong aria-hidden="true">8.</strong> Developing 'flow'</a></li><li><ol class="section"><li><a href="developing/prereqs.html"><strong aria-hidden="true">8.1.</strong> Pre-requisites</a></li><li><a href="developing/make.html"><strong aria-hidden="true">8.2.</strong> Makefile targets</a></li><li><a href="developing/contributing.html"><strong aria-hidden="true">8.3.</strong> Ways to contribute</a></li><li><ol class="section"><li><a href="developing/issues.html"><strong aria-hidden="true">8.3.1.</strong> Issues</a></li><li><a href="developing/prs.html"><strong aria-hidden="true">8.3.2.</strong> PRs</a></li><li><a href="samples/sample_development.html"><strong aria-hidden="true">8.3.3.</strong> Developing a sample</a></li><li><a href="developing/ci.html"><strong aria-hidden="true">8.3.4.</strong> Continuous Integration Tests</a></li></ol></li></ol></li><li><a href="internals/overview.html"><strong aria-hidden="true">9.</strong> Internals of 'flow</a></li><li><ol class="section"><li><a href="internals/flow_loading.html"><strong aria-hidden="true">9.1.</strong> Flow Loading</a></li><li><a href="internals/flow_compiling.html"><strong aria-hidden="true">9.2.</strong> Flow Compiling</a></li><li><a href="internals/flow_execution.html"><strong aria-hidden="true">9.3.</strong> Flow Execution</a></li></ol></li></ol>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light <span class="default">(default)</span></button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">The `flow` Guide</h1> 
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <a class="header" href="#welcome" id="welcome"><h1>Welcome!</h1></a>
+<p>Welcome to the guide to my pet project called 'flow'</p>
+<p><code>flow</code> is a system for defining and running parallel, data-dependency driven 'programs'.</p>
+<p>The project is in early stages and the current implementation is being used by me as a way
+to clarify my ideas and to continue to learn rust and other modern programming languages and tools.</p>
+<p>Learn more about what it is and why I created it by reading the introduction section,
+or dive right in and see if you can understand your first 'flow' with zero previous knowledge
+and just your programmer's intuition.</p>
+<p>This chapter provides you in introduction to 'flow', specifically:</p>
+<ul>
+<li>What is 'flow'?</li>
+<li>What components exist within the 'flow' &quot;system&quot;?</li>
+<li>What lead to the creation of 'flow'?</li>
+<li>What things were not part of the formation of 'flow'?</li>
+<li>What is the current status of the project?</li>
+<li>A simple explanation of how you &quot;program&quot; a 'flow'</li>
+</ul>
+<a class="header" href="#what-is-flow" id="what-is-flow"><h2>What is 'flow'?</h2></a>
+<p><code>flow</code> is a system for defining and running parallel, data-dependency driven 'programs'.</p>
+<p>A 'flow' is a program created by a description of interconnected and communicating &quot;processes&quot; or functions,
+where functions have no side-effects except accepting (possibly) accespting inputs and (possible) producing outputs.</p>
+<p>The interconnections between functions are explicit declarations of data dependencies between them.
+i.e. what data is required for a function to be able to run, and what output it produces.</p>
+<p>Thus a 'flow' is inherently parallem, without any further need to express the parallelism of the described algorithm.</p>
+<p>As part of describing the interconnections, I would like 'flow' to be also visual, making the data dependencies visible
+and directly &quot;authorable&quot;. Functions and flows are nestable, so that higher
+level programs can be constructed by combining primitive functions and nested 'flows' defined elsewhere, making flows
+also reusable.</p>
+<p>At the time of writing, I haven't been able to do the GUI for the visual creation, viewing, running and
+debugging of flows - and flows are described in a textual intermediate format based on TOML. This format could
+be used as the description format for a visual GUI though.</p>
+<p>I don't consider it a &quot;programming language&quot; as the functionality of the program is created from the combination of many
+low-level functions, that could be very fine grained and implemented in many programming languages (or even assembly,
+WebAssembly, LLVM-IR or something else). Most logic (control flow, loops) and comes from how the basic functions are
+combined in 'flows'. I have chosen to implement my basic functions (in 'flowstdlib' in rust, but they could
+be in other languages). I have made provisions for the code generation of &quot;compiled&quot; flows to be in multiple languages, with rust just
+the first one I have implemented.</p>
+<p>I don't consider it (or the flow description format) a DSL. The file format chosen for describing a flow in text files is
+not important providing it can capture the flow description. I chose TOML as there was good library support for parsing
+and generating it in rust. I have made provisions for the flow description to be able top be in other formats (and possibly
+even) to mix and combine descriptions in multiple formats. I started a JSON one but haven't had the need to implement it as
+TOML is working fine so far.</p>
+<p>Q. Is it high-level or low-level?</p>
+<p>A. &quot;Well...yes&quot;.</p>
+<p>The level of granularity chosen for the implementation of the primitive functions that flows are built from
+(both the ones I have is arbitrary and could be as simple as adding two numbers, or a function can implement a
+complex algorithm - but the
+implemented in 'flowstdlib' and custom functions provided as part of a flow description)</p>
+<a class="header" href="#components" id="components"><h2>Components</h2></a>
+<p>Major components of the project and their status are:</p>
+<ul>
+<li>'flowclib' - a rust library for parsing and &quot;compiling&quot; flow descriptions from toml files, producing generated output projects that can be compiled and run.</li>
+<li>'flowc' - the flow &quot;compiler&quot; that is a CLI built around the 'flowclib' and that takes a number of command line arguments and source files or URLs.</li>
+<li>'flowrlib' - the flow &quot;runtime&quot; library that is currently compiled and linked with a generated flow and takes care of executing it.</li>
+<li>'flowstdlib' - the flow &quot;standard library&quot; which contains a set of pre-defined functions that can be used by flows being defined by the user</li>
+<li>'web' - the first steps for a project to provide a web ui to flow definition and execution built using rust and WebAssembly with wasm-bindgen - just a &quot;hello world&quot; skeleton that compiles and runs at the moment</li>
+<li>'electron' - intended as a standalone application, to be built wrapping the 'web' ui above, currentll stalled and about to be re-started around WebAssembly and new 'web' example</li>
+</ul>
+<a class="header" href="#the-inspirations-for-flow" id="the-inspirations-for-flow"><h2>The Inspirations for 'flow'</h2></a>
+<p>I have had many sources of inspiration in this area over the past three decades, and without realizing it they started to coallesc
+in my head and seemingly unrelated ideas from very different projects started to come together to form what I eventually called 'flow'
+and started to work on.</p>
+<p>I will describe the specific inspirations in more detail in later sections of this guide.</p>
+<p>The impetus to actually implement something, instead of just thinking about it, came over a year ago as a way to learn
+some rust (and later adding WebAssembly to the mix).</p>
+<ul>
+<li>The Inmos transputer chip and it's Occam parallel programming language (which I studied at Univerity in the '80's)</li>
+<li>Structured Analysis (and Design) from my work with it in HP the '80s!</li>
+<li>UNIX pipes</li>
+<li>Trace based compiler instruction scheduling work done at MultiFlow and later HP by Josh Fisher, Paolo Faraboschi and others</li>
+<li>Amoeba distributed OS by Andrew Tannenbaum that made a collaborating network of computers appear as one to the user of a &quot;Workstation&quot;</li>
+<li>Yahoo! Pipes</li>
+</ul>
+<a class="header" href="#non-inspirations" id="non-inspirations"><h2>Non-Inspirations</h2></a>
+<p>There are a number of things that you might suspect were part o fmy set of inspirations
+fopr creating 'flow', or maybe you think I even copied the idea from them, but in fact
+(you'll have to trust me on this one) were in fact not.</p>
+<p>I didn't study Computer Science, and if I had I may well have been exposed to some of these
+subjects a long-time ago. That would probably have saved me a lot of time.</p>
+<p>But, then I would have been implementing someone else's ideas and not (what I thought were)
+my own. Think of all the satisfaction I would have lost out on while re-inventing thirty to
+forty year-old ideas!</p>
+<p>While implementing the first steps of 'flow' I started to see some materials come up in
+my Internet searches, that looked like they could be part of a theory of the things I
+was struggling with. The Main one would be Hoare's 1976 paper on the &quot;Theory of
+Communicating Sequential Processes&quot; (or CSP for short).</p>
+<p>It turns out some of that based work was the basis for some of my inspirations (e.g.
+Inmos Transputer and Occam language), unbeknownst to me.</p>
+<p>But I decided to deliberately ignore them as I worked out my first thoughts, did
+the initial implementation and got some simple examples up and running!</p>
+<p>Later, I looped back and read some papers, and confirmed most of my suspicions.</p>
+<p>I got a bit bored with the algebra approach to it (and related papers) though and didn't
+read too much more or learn too much more.</p>
+<p>One Hoare paper referes more to a practical implementation, and does hit on a number of the
+very subjects I was struggling with, such as the buffering (or not) of data on &quot;data flows&quot;
+between functions (or processes in his terms).</p>
+<p>Once I progress some more, I will probably go back and read more of these papers and books and
+find solutions to the problems I have struggled to work out on my own - but part of the
+purpose of this project for me is the intellectual challenge to work them out for myself, as
+best as I can.</p>
+<a class="header" href="#status" id="status"><h2>Status</h2></a>
+<p>The project is still really under-construction in <a href="https://github.com/andrewdavidmackenzie">the flow repo</a> with myself as the only contributor.</p>
+<p>The 'flowc' compiler works for quite a few samples I have created, but the &quot;description format&quot; and &quot;runtime&quot; still lack some important
+semantics, in particular related to parallelism.</p>
+<a class="header" href="#flow-programming" id="flow-programming"><h2>Flow Programming</h2></a>
+<p>Flows are &quot;programmed&quot; by describing a network of &quot;functions&quot; that are connected by &quot;data flows&quot;.</p>
+<p>In flow, there are some specific semantics about how the data flows and function invocation
+work, but the basics are pretty simple.</p>
+<p>A flows may have zero or more inputs, a set of outputs (which can be destructured into component parts),
+values (initialized or not), functions, and sub-flows.</p>
+<p>Hence:</p>
+<p><code>flow = [input] + [output] + [flow] + [values] + [functions]</code></p>
+<p>To Be Extended....</p>
+<a class="header" href="#first-flow" id="first-flow"><h2>First flow</h2></a>
+<p>Below is a schematic diagram of a 'flow'.</p>
+<p>Without knowing anything about 'flow' and it's detailed semantics
+can you guess what this flow does when executed and what the output to STDOUT will be?
+<img src="first.png" alt="First flow" /></p>
+<p>The next section reveals the answer and walks you thru it.</p>
+<a class="header" href="#understanding-a-simple-flow" id="understanding-a-simple-flow"><h2>Understanding a simple flow</h2></a>
+<p>The flow shown in the image in the previous section is a fibonacci series generator.</p>
+<p>Here is a simple explanation of what's involved and how it runs.</p>
+<p>You can find a complete description of the 'flow' semantics used, and others, in the next
+section <a href="../describing/definition_overview.html">Describing Flows</a></p>
+<a class="header" href="#top-level---context" id="top-level---context"><h3>Top Level - Context</h3></a>
+<p>The top-level, or root, of a flow is called the Context. This term is stolen from
+&quot;Structured Analysis&quot; (see <a href="../introduction/inspirations.html">Inspirations section</a>) and it's
+purpose is to define what the interaction with the surrounding execution environment is.</p>
+<p>Other flows can be included under this level, via references to separate flow description files,
+to enable encapsulation and sub-flow reuse.</p>
+<p>In this example there is no sub-flow included (for the sake of simplicity).</p>
+<a class="header" href="#interaction-with-the-execution-environment" id="interaction-with-the-execution-environment"><h3>Interaction with the execution environment</h3></a>
+<p>This top-level defines what the interaction with the surrounding execution environment is,
+such as STDIO, or other inputs/outputs provided by the flow runtime being used.</p>
+<p>The only interaction with the execution environment in this example is the use of STDOUT.</p>
+<p>STDOUT (Standard Output) is an output (input to a function) defined in the flow standard library (flowstdlib),
+to which output can be sent for display.</p>
+<p>When executing a flow using <code>flowc</code>, STDOUT is printed sent to the standard output of
+the process running <code>flowc</code>, hence is displayed in the terminal when running from the command line.</p>
+<a class="header" href="#values" id="values"><h3>Values</h3></a>
+<p>The boxes labelled &quot;HEAD&quot; and &quot;HEAD-1&quot; in this example are examples of values. They store a simple
+value. In this example they are both initialized with the integer value 1. Initialization of all
+initialized values happens before flow execution starts.</p>
+<a class="header" href="#functions" id="functions"><h3>Functions</h3></a>
+<a class="header" href="#connections" id="connections"><h3>Connections</h3></a>
+<a class="header" href="#real-implementation" id="real-implementation"><h1>Real Implementation</h1></a>
+<p>This flow exists as a sample in the <code>samples/first</code> folder and is written to be as simple as possible,
+not using nested flows or similar.</p>
+<a class="header" href="#running-the-corresponding-sample" id="running-the-corresponding-sample"><h3>Running the corresponding sample</h3></a>
+<p>You can run this first flow and observe its output from the terminal, while in the project root folder:</p>
+<pre><code>&gt; cargo run -- samples/first
+</code></pre>
+<p>This should generate the flow and then run it with the runtime, producing a fibonacci series and eventually an
+integer overflow panic when the next number becomes too big to hold in a rust integer, similar to this:</p>
+<pre><code>&gt; cargo run -- samples/first
+   Compiling flowstdlib v0.6.0 (/Users/andrew/workspace/flow/flowstdlib)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.75s
+     Running `target/debug/flowc samples/first`
+&quot;1&quot;
+&quot;1&quot;
+&quot;2&quot;
+&quot;3&quot;
+&quot;5&quot;
+&quot;8&quot;
+...... lines deleted ......
+&quot;4660046610375530309&quot;
+ERROR	- panic occurred in file '/Users/andrew/workspace/flow/flowstdlib/src/math/add.rs' at line 22
+ERROR	- Process STDERR:
+    Finished dev [unoptimized + debuginfo] target(s) in 0.12s
+     Running `samples/first/rust/target/debug/context`
+
+ERROR	- Exited with status code: 101
+</code></pre>
+<a class="header" href="#step-by-step" id="step-by-step"><h2>Step-by-Step</h2></a>
+<p>Execution is in terms of Functions. Values are in fact a specific implementation of a
+Function, as Values have to store values, unlike functions.</p>
+<a class="header" href="#init" id="init"><h3>Init</h3></a>
+<p>The list of Functions is loaded and all are initialized.
+This includes making the initial values available (just once) at
+the inputs of any values that have initial values specified in the flow description.</p>
+<p>Status (ready to run, pending inputs, blocked etc) of all runnables is set based on availability of their inputs and
+not being blocked from sending it's output.</p>
+<a class="header" href="#execution-loop" id="execution-loop"><h3>Execution Loop</h3></a>
+<p>In general, the execution loop takes the next &quot;runnable&quot; (function or value) that is in the ready state
+(has all it's input values available, and is not blocked from sending it's output by other runnables) and runs it.</p>
+<p>That consumed the inputs and sends the output value to all runnables connected to the output. That makes that input
+available to the other runnable connected to the output, and it may make that other runnable ready to run.</p>
+<p>When there are no more runnables in the ready to run state, then execution has terminated and the flow ends.</p>
+<a class="header" href="#specific-sequence-for-this-example" id="specific-sequence-for-this-example"><h3>Specific Sequence for this example</h3></a>
+<a class="header" href="#init-1" id="init-1"><h4>Init:</h4></a>
+<ul>
+<li>Initial values of 1 are made available in the inputs of &quot;HEAD&quot; and &quot;HEAD-1&quot; values.</li>
+<li>HEAD-1 has input (1) available and is not blocked from sending its outputs, so it is made ready to run.</li>
+<li>HEAD has input (1) available and is not blocked from sending its outputs, so it is made ready to run.</li>
+<li>STDOUT does not have an input value available so it is not &quot;ready&quot;</li>
+<li>SUM does not have it's inputs available so it is not &quot;ready&quot;</li>
+</ul>
+<a class="header" href="#loop-starts" id="loop-starts"><h4>Loop Starts</h4></a>
+<p>ReadyList = HEAD-1(1), HEAD(1)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>HEAD-1 is run with input 1
+<ul>
+<li>HEAD-1 makes the value 1 available on it's output (to STDOUT and SUM)
+<ul>
+<li>HEAD-1 is now blocked from running again until it's output to SUM is free</li>
+<li>STDOUT has all inputs available (from &quot;HEAD-1&quot;) so is made &quot;ready&quot;</li>
+<li>SUM(1,_) only has one of its inputs available, so it is not made &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD(1), STDOUT(1)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>&quot;HEAD&quot; is run with input 1
+<ul>
+<li>This updates it's value and makes the value 1 available on it's outputs (to HEAD-1 and SUM)
+<ul>
+<li>SUM(1,1) now has both inputs available (from HEAD and HEAD-1) so it is made &quot;runnable&quot;</li>
+<li>HEAD-1(1) has an input value available (from HEAD, but it cannot run as it's output is blocked by SUM,
+so it is &quot;blocked on output&quot; and not &quot;ready&quot;.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = STDOUT(1), SUM(1,1)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>&quot;STDOUT&quot; runs with input 1. It prints &quot;1&quot; on the stdout of the runtime.</li>
+</ul>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>ReadyList = SUM(1,1)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>&quot;SUM&quot; runs with inputs 1 and 1. It produces the value 2 on it's output (to HEAD)
+<ul>
+<li>SUM running consumes its input and unblocks HEAD-1(1) from running</li>
+<li>HEAD has its input available so is made &quot;ready&quot; with input 2</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD-1(1), HEAD(2)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>HEAD-1 is run with input 1. It produces 1 on it's output (to STDOUT and SUM)
+<ul>
+<li>STDOUT(1) has its input available so is made &quot;ready&quot;</li>
+<li>SUM(1, _) only has one input available and so is not &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD(2), STDOUT(1)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>&quot;HEAD&quot; is run with input 2. It produces 2 on it's output (to HEAD-1 and SUM)
+<ul>
+<li>SUM(1,2) is made &quot;ready&quot;</li>
+<li>HEAD-1(2) is blocked on sending by SUM</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = STDOUT(1), SUM(1,2)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>&quot;STDOUT&quot; runs with input 1. It prints &quot;1&quot; on the stdout of the runtime.</li>
+</ul>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>ReadyList = SUM(1,2)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>SUM runs with inputs 1 and 2. It produces the value 3 on it's output (to HEAD)
+<ul>
+<li>HEAD-1(2) has its output unblocked by SUM and so is made &quot;ready&quot;</li>
+<li>HEAD(3) has its input available so is made &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD-1(2), HEAD(3)</p>
+<ul>
+<li>HEAD-1(2) is run. It produces 2 on it's output (to STDOUT and SUM)
+<ul>
+<li>STDOUT(2) has its input avaialble so is made &quot;ready&quot;</li>
+<li>SUM(2, _) lacks an input and is not ready</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD(3), STDOUT(2)</p>
+<ul>
+<li>HEAD(3) is run. It produces 3 on it's output (to HEAD-1 and SUM)
+<ul>
+<li>SUM(2, 3) is made &quot;ready&quot;</li>
+<li>HEAD-1(3) is blocked on SUM so not &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = STDOUT(2), SUM(2,3), HEAD-1(3)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>STDOUT(2)) runs. It prints &quot;2&quot; on the stdout of the runtime.</li>
+</ul>
+<blockquote>
+<p>2</p>
+</blockquote>
+<p>ReadyList = SUM(2,3)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>SUM(2,3) is run. It produces the value 5 on it's output (to HEAD)
+<ul>
+<li>HEAD-1(3) has its output unblocked by SUM and so is made &quot;ready&quot;</li>
+<li>HEAD(5) has its input available so is made &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD-1(3), HEAD(5)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>HEAD-1(3) is run. It produces 3 on it's output (to STDOUT and SUM)
+<ul>
+<li>STDOUT(3) has its input avaialble so is made &quot;ready&quot;</li>
+<li>SUM(3, _) lacks an input and is not ready</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = HEAD(5), STDOUT(3)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>HEAD(5) is run. It produces 5 on it's output (to HEAD-1 and SUM)
+<ul>
+<li>SUM(3, 5) is made &quot;ready&quot;</li>
+<li>HEAD-1(5) is blocked on SUM so not &quot;ready&quot;</li>
+</ul>
+</li>
+</ul>
+<p>ReadyList = STDOUT(3), SUM(3,5)</p>
+<p>Next runnable with status &quot;ready&quot; is run:</p>
+<ul>
+<li>STDOUT(3)) runs. It prints &quot;3&quot; on the stdout of the runtime.</li>
+</ul>
+<blockquote>
+<p>3</p>
+</blockquote>
+<p>and so on, and so forth.... producing a fibonacci series on the standard output of the runtime:</p>
+<blockquote>
+<p>1, 1, 2, 3, 5, 8 ...</p>
+</blockquote>
+<a class="header" href="#debugging-your-first-flow" id="debugging-your-first-flow"><h2>Debugging your first flow</h2></a>
+<p>When the flow is compiled by flowc, the current implementation is to generate a rust project that is linked with the
+runtime and together it is built and run, with the runtime library executing the flow according to the generated
+tables of runnables.</p>
+<p>NOTE: in the future this implementation will change to generate the runnables table in a data file that is loaded and
+run by a single runtime, removing the need to compile and build each time.</p>
+<a class="header" href="#running-the-generated-project" id="running-the-generated-project"><h3>Running the generated project</h3></a>
+<p>You can run this generated project for the flow directly from the <code>rust</code> subdirectory of the sample.
+So, from the project root:</p>
+<ul>
+<li><code>cd samples/first/rust</code></li>
+<li><code>cargo run</code></li>
+</ul>
+<a class="header" href="#command-line-options-to-generated-project" id="command-line-options-to-generated-project"><h3>Command line options to generated project</h3></a>
+<p>The generated project uses <code>clap</code> to parse command line options, and you can see what they are using <code>--help</code>.</p>
+<p>When running the project via <code>cargo run</code> you should add <code>--</code> to mark the end of the options passed to cargo,
+and the start of the options passed to the executable run by cargo.</p>
+<pre><code>&gt; cargo run -- --help
+    Finished dev [unoptimized + debuginfo] target(s) in 0.13s
+     Running `target/debug/root --help`
+flowrlib
+
+USAGE:
+    root [OPTIONS] [flow_args]...
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l, --log &lt;LOG_LEVEL&gt;    Set log level for output (trace, debug, info, warn, error (default))
+
+ARGS:
+    &lt;flow_args&gt;...
+</code></pre>
+<a class="header" href="#getting-debug-output" id="getting-debug-output"><h3>Getting debug output</h3></a>
+<p>If you want to follow what the runtime is doing in more detail, you can increase the log level (default level is ERROR)
+using the -l/--log option.</p>
+<p>So, if you want to walk through each and every step of the flow's execution, similar to the previous <a href="step-by-step.html">step by step section</a>
+then you can do so by using <code>-l DEBUG</code> and piping the output to <code>more</code> (as there is a lot of output!) <code>cargo run -- -l DEBUG | more</code></p>
+<p>which should produce output similar to this:</p>
+<pre><code>INFO    - 'flowrlib' version '0.5.0'
+DEBUG   - Panic hook set to catch panics in runnables
+DEBUG   - Initializing all runnables
+DEBUG   -       Initializing runnable #0 'HEAD-1'
+DEBUG   -               Value initialized by writing 'Number(1)' to input
+DEBUG   -                       Runnable #0 inputs are ready
+DEBUG   -                       Runnable #0 not blocked on output, so added to end of 'Will Run' list
+DEBUG   -       Initializing runnable #1 'HEAD'
+DEBUG   -               Value initialized by writing 'Number(1)' to input
+DEBUG   -                       Runnable #1 inputs are ready
+DEBUG   -                       Runnable #1 not blocked on output, so added to end of 'Will Run' list
+DEBUG   -       Initializing runnable #2 'sum'
+DEBUG   -       Initializing runnable #3 'print'
+DEBUG   - Starting execution loop
+DEBUG   - -----------------------------------------------------------------
+DEBUG   - Dispatch count: 0
+DEBUG   -        Can Run: {1, 0}
+DEBUG   -       Blocking: []
+DEBUG   -       Will Run: [0, 1]
+DEBUG   - -------------------------------------
+DEBUG   - Runnable #0 'HEAD-1' dispatched
+DEBUG   -       Runnable #0 consumed its inputs, removing from the 'Can Run' list
+DEBUG   -       Runnable #0 'HEAD-1' running with inputs: [[Number(1)]]
+DEBUG   -               Runnable #0 'HEAD-1' sending output '1' to Runnable #2 'sum' input #0
+DEBUG   -                       Runnable #0 is now blocked on output by Runnable #2
+DEBUG   -               Runnable #0 'HEAD-1' sending output '1' to Runnable #3 'print' input #0
+DEBUG   -                       Runnable #0 is now blocked on output by Runnable #3
+DEBUG   -                       Runnable #3 inputs are ready
+DEBUG   -                       Runnable #3 not blocked on output, so added to end of 'Will Run' list
+DEBUG   -       Runnable #0 'HEAD-1' completed
+DEBUG   - Dispatch count: 1
+DEBUG   -        Can Run: {1, 3}
+DEBUG   -       Blocking: [(2, 0), (3, 0)]
+DEBUG   -       Will Run: [1, 3]
+DEBUG   - -------------------------------------
+DEBUG   - Runnable #1 'HEAD' dispatched
+DEBUG   -       Runnable #1 consumed its inputs, removing from the 'Can Run' list
+DEBUG   -       Runnable #1 'HEAD' running with inputs: [[Number(1)]]
+DEBUG   -               Runnable #1 'HEAD' sending output '1' to Runnable #0 'HEAD-1' input #0
+DEBUG   -                       Runnable #1 is now blocked on output by Runnable #0
+DEBUG   -                       Runnable #0 inputs are ready
+DEBUG   -               Runnable #1 'HEAD' sending output '1' to Runnable #2 'sum' input #1
+DEBUG   -                       Runnable #1 is now blocked on output by Runnable #2
+DEBUG   -                       Runnable #2 inputs are ready
+DEBUG   -                       Runnable #2 not blocked on output, so added to end of 'Will Run' list
+DEBUG   -       Runnable #1 'HEAD' completed
+DEBUG   - Dispatch count: 2
+DEBUG   -        Can Run: {3, 2, 0}
+DEBUG   -       Blocking: [(2, 0), (3, 0), (0, 1), (2, 1)]
+DEBUG   -       Will Run: [3, 2]
+</code></pre>
+<a class="header" href="#flow-definition" id="flow-definition"><h2>Flow Definition</h2></a>
+<p>A flow can define the entities external to the program with which it interacts and should be provided by the run-time,
+or bundled via a library. i.e. they are not included in the flow, but the flow interacts with them as part of it's
+run-time &quot;context&quot;.</p>
+<p>By definition, nothing enters or leaves the top-level flow (&quot;context&quot;).
+At most things flow between the contained flow and entities referenced, as defined by the connections.</p>
+<p>A flow contain 0 or more sub-flows which are described in separate &quot;flow&quot; files.
+The entities referenced in the top-level flow definition are connected to inputs and outputs of any sub-flow by
+connections.</p>
+<p>So, valid entries in a flow definition include:</p>
+<ul>
+<li><code>flow</code>        - a String naming this flow (obligatory)</li>
+<li><code>version</code>     - a SemVer compatible version number for this flow (Optional)</li>
+<li><code>author_name</code> - String for name of author of the flow (Optional)</li>
+<li><code>author_email</code>- String for email of author of the flow (Optional)</li>
+<li><code>io</code>          - 0 or more input/outputs of this flow made available to any parent including it</li>
+<li><code>value</code>       - 0 or more values contained in this flow</li>
+<li><code>process</code>     - 0 or more references to sub-processes to include under the current flow. A sub-process
+can be another <code>flow</code> or a <code>function</code></li>
+<li><code>connection</code>  - 0 or more connections between outputs and inputs of values or sub-processes and <code>io</code> of this flow
+(hence permitting connections to/from parent flows including this one)</li>
+</ul>
+<a class="header" href="#context" id="context"><h3>Context</h3></a>
+<p>All flows start with a flow called the <code>context</code>. This is the flow that defines the interactions
+of the overall flow hierarchy with the environment or &quot;context&quot; around the contained flows.</p>
+<p>Any flow can contain any number of nested flows via <a href="process_references.html">Process References</a>.</p>
+<a class="header" href="#name" id="name"><h2>Name</h2></a>
+<p>A string used to identify an element.</p>
+<a class="header" href="#io" id="io"><h2>IO</h2></a>
+<p>IOs produce or consume data of a specific type, and are where data enters/leaves a flow/value/function.</p>
+<ul>
+<li><code>name</code> - the IO Reference that is used to identify it in connections to/from it</li>
+<li><code>type</code> [optional] - An optional <a href="types.html">Data type</a> for this IO</li>
+<li><code>depth</code> [optional] - An optional specification of the number of entries that must be &quot;queued up&quot; at this input
+before it is considered &quot;available&quot; (default = 1)</li>
+</ul>
+<a class="header" href="#using-depth" id="using-depth"><h3>Using <code>depth</code></h3></a>
+<p>Some functions may require multiple values from a stream of values to be able to execute
+(e.g. a stream of input coordinates of line starts and ends, to a function to calculate
+line lengths). In this case the input can be defined with a <code>depth</code> of 2, and the function will not
+be run until two values are available. It will then run and produce one output.</p>
+<a class="header" href="#process-reference" id="process-reference"><h2>Process Reference</h2></a>
+<p>Flows may reference a another flow or a function which is defined in a separate
+definition file. These are referred to under the generic term of <code>process</code></p>
+<a class="header" href="#process-reference-fields" id="process-reference-fields"><h3>Process Reference Fields</h3></a>
+<ul>
+<li><code>alias</code> - an alias to use to refer to the process in this flow.
+<ul>
+<li>This can be different from the <code>name</code> defined by the process itself</li>
+<li>This can be used to create two difference instances of a process in a flow,
+and the ability to refer to them separately and distinguish them in connections.</li>
+</ul>
+</li>
+<li><code>source</code> - the source of where the process is defined.</li>
+</ul>
+<a class="header" href="#source-formats" id="source-formats"><h3>Source formats</h3></a>
+<p>The following formats for specifying the <code>source</code> are available:</p>
+<ul>
+<li>No &quot;scheme&quot; in the URI --&gt; <code>file:</code> is assumed</li>
+<li><code>file:</code> scheme --&gt; look for process on the Local File System</li>
+<li><code>http:</code> or <code>https:</code> scheme --&gt; look for process on a Remote Web Server</li>
+<li><code>lib:</code> --&gt; look for process in a Library</li>
+</ul>
+<a class="header" href="#local-file-system" id="local-file-system"><h4>Local File System</h4></a>
+<p>The process definition file is in the local file system.</p>
+<ul>
+<li>in the flow's directories, using relative file paths
+<ul>
+<li>e.g. <code>source = &quot;my_function.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;my_flow.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;subdir/my_other_function.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;subdir/my_other_process.toml&quot;</code></li>
+</ul>
+</li>
+<li>in a different flow's directories, using relative file paths
+<ul>
+<li>e.g. <code>source = &quot;../other_flow/other_function.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;../other_flow/other_flow.toml&quot;</code></li>
+</ul>
+</li>
+<li>elsewhere in the local file system, using absolute paths
+<ul>
+<li>e.g. <code>source = &quot;/root/other_directory/other_function.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;/root/other_directory/other_flow.toml&quot;</code></li>
+</ul>
+</li>
+</ul>
+<a class="header" href="#remote-web-server" id="remote-web-server"><h4>Remote Web Server</h4></a>
+<p>The process definition file can be found on a remote server, just specify the
+URL of the file:</p>
+<ul>
+<li>e.g. <code>source = &quot;http://my_flow_server.com/folder/function.toml&quot;</code></li>
+<li>e.g. <code>source = &quot;https://my_secure_flow_server.com/folder/flow.toml&quot;</code></li>
+</ul>
+<a class="header" href="#library-processes" id="library-processes"><h4>Library Processes</h4></a>
+<p>The process is in a library that is available to your current installation.
+In order for flow to find the function at compile time it uses the
+environment variable <code>FLOW_LIB_PATH</code>, that is a <code>PATH</code> style variable with zero or
+more directory entries.</p>
+<ul>
+<li>e.g. <code>source = &quot;lib://flowr/stdio/stdin.toml&quot;</code>
+<ul>
+<li>Library name = <code>flowrlib</code></li>
+<li>Function path within the library = <code>stdio/stdin.toml</code></li>
+</ul>
+</li>
+</ul>
+<p>All the directories in the path are searched for a top-level sub-directory that
+matches the library name.</p>
+<p>If the named library is found, the Function path within the library is used to try and
+find the process definition file.</p>
+<p>For example, if I define <code>FLOW_LIB_PATH</code> thus:</p>
+<ul>
+<li><code>FLOW_LIB_PATH=/Users/me/workspace/flow</code></li>
+</ul>
+<p>And my flow refererences a process thus:</p>
+<pre><code>[[process]]
+alias = &quot;stdin&quot;
+source = &quot;lib://flowr/stdio/stdin.toml&quot;
+</code></pre>
+<p>Then the directory <code>/Users/me/workspace/flow/flowrlib</code> is looked for.</p>
+<p>If that directory and hence the library is found, then the Function path within the library
+<code>stdio/stdin.toml</code> is used to create the full path to the Function definition file
+<code>/Users/me/workspace/flow/flowrlib/stdio/stdin.toml</code>.</p>
+<p>If that file exists and can be read, the process defined there is used and
+included in the flow.</p>
+<a class="header" href="#value-definitions" id="value-definitions"><h2>Value Definitions</h2></a>
+<p>A value of the specified type that is available as an input to something else, or which can
+be written to for storage:</p>
+<ul>
+<li><code>name</code> - the name of the value</li>
+<li><code>type</code> - the type of the value</li>
+<li><code>init</code> [Optional] - it's initial value if one is desired</li>
+<li><code>static</code> [Optional] - the value should remain, even after sending via its output</li>
+</ul>
+<p>A value can have an initial value specified. It will be setup at flow initialization before execution
+begins and will immediately be available at it's output on the first iteration of the execution loop.</p>
+<p>If no initial value is provided, then initally a value will be empty and remain so until another
+value or function (connected to it by a connection) sends a value to it.</p>
+<p>When the output of a value is read (as the input to another value or function) it is emptied, unless the
+optional <code>static</code> keyword is used, in which case when written to, that value remains available at its output
+always.</p>
+<a class="header" href="#function-definitions" id="function-definitions"><h2>Function Definitions</h2></a>
+<p>A function is defined in a definition file (e.g. <code>add.toml</code>) that should be alongside the function's
+implementation files (see later)</p>
+<p>A function can consume data on 0 or more inputs (it must have all available in order to run)
+and then can produce data on 0 or more outputs.</p>
+<p>A function can be a pure source of data (e.g. <code>stdin</code> that interacts with the execution environment
+to get the data and then outputs it) or a pure sink of data (e.g. <code>stdout</code> that takes
+an input and passes it to the execution environment and produces no output in the flow).</p>
+<a class="header" href="#function-definition-fields" id="function-definition-fields"><h3>Function Definition Fields</h3></a>
+<ul>
+<li><code>name</code>   - the name of the function. This is required to link the definition with the
+implementation and allow the loader/compiler to be able to find the implementation of the
+function and to include it in the generated project. <code>name</code> must match exactly the name of the
+object implemented.</li>
+<li><code>input</code>  - zero or more inputs (as per <a href="ios.html">IO</a>)</li>
+<li><code>output</code> - one or more outputs (as per <a href="ios.html">IO</a>)</li>
+</ul>
+<a class="header" href="#runtime-semantics" id="runtime-semantics"><h3>Runtime semantics</h3></a>
+<p>A Function won't be run by the runtime until all its inputs are available.
+When it is run it may produce a data value on it's output.</p>
+<p><em>TODO</em></p>
+<ul>
+<li>default output</li>
+<li>named outputs</li>
+</ul>
+<p><em>TODO</em></p>
+<ul>
+<li>Describe destructuring output</li>
+</ul>
+<a class="header" href="#function-implementations" id="function-implementations"><h3>Function Implementations</h3></a>
+<p>Must be able to be invoked by flow, and implement a defined interface to be able to invoke them and get the results.
+Rust or rust ffi to use functions from other languages?</p>
+<p><em>TO Consider</em></p>
+<ul>
+<li>specifying data types at all levels, or optionally, maybe at top level to make it very easy to
+determine the input/output &quot;contact&quot; of flow without having to load all the levels all the way done.</li>
+</ul>
+<a class="header" href="#types" id="types"><h2>Types</h2></a>
+<p>By default flow supports JSON types:</p>
+<ul>
+<li><code>Boolean</code></li>
+<li><code>Number</code></li>
+<li><code>String</code></li>
+<li><code>Map</code></li>
+<li><code>Array</code></li>
+<li><code>Json</code></li>
+</ul>
+<a class="header" href="#connection" id="connection"><h2>Connection</h2></a>
+<p>Connections connect a source of data (via an IO Reference) to a sink of data (via an IO Reference)
+of a compatible <a href="types.html">type</a>:</p>
+<ul>
+<li><code>name</code> [Optional] - an Optional name for the flow</li>
+<li><code>from</code> = <a href="io_references.html">IO Reference</a> to the Data source that this connection comes from</li>
+<li><code>to</code> = <a href="io_references.html">IO Reference</a> to a Data sink that this connection goes to</li>
+</ul>
+<p>The type of a data flow is inferred from the two IOs that it connects (after checking they coincide)</p>
+<a class="header" href="#runtime-semantics-1" id="runtime-semantics-1"><h3>Runtime Semantics</h3></a>
+<p>An input IO can receive data from (i.e. be connected to) multiple outputs.</p>
+<p>The first to arrive is the one that will fullfill the input the connection connects to and the
+destination will execute with that input value.</p>
+<p>An output IO can be connected to multiple inputs on other values/flows/functions via multiple
+connections.</p>
+<p>When the data is produced on the output by the Data source the data is copied to each
+Data sink via each connection that exists.</p>
+<p>An output can only be produced when the data can be sent to <em>all</em> connected destinations,
+avoiding any data loss or need for buffering. The sender is blocked until all destinations are
+available.</p>
+<p>A runnable maybe blocked on output by other &quot;busy&quot; inputs, thus inputs are not overwritten
+but queued up with backpressure.</p>
+<p>A function or value will not be executed until all inputs are available and it can sent its
+output to all connected destinations</p>
+<p>Loops are permitted from an output to an input, and are used as a feature to achieve certain behaviours.</p>
+<a class="header" href="#type-match" id="type-match"><h3>Type Match</h3></a>
+<p>For a connection to be valid and used in execution of a flow, the data source must be found,
+the data sink must be found and the two must be of matching DataTypes.</p>
+<p>If those conditions are not met, then a connection will be dropped (with an error message output)
+and the flow will attempted to be built and executed without it.</p>
+<a class="header" href="#io-references" id="io-references"><h2>IO References</h2></a>
+<p>This uniquely identifies an IO from a Data source (flow/value/function).</p>
+<p>If any flows or functions defined in other files are referenced with an alias, then it should be
+used in the IO references to inputs or outputs of that referenced flow/function.</p>
+<a class="header" href="#data-sources" id="data-sources"><h3>Data sources</h3></a>
+<p>Sources of data which are valid for the <em>from</em> field of a connection are:</p>
+<p>Inside a flow:</p>
+<ul>
+<li><code>input/{input_name}</code></li>
+<li><code>value/{value_name}</code></li>
+</ul>
+<p>Referenced from a flow:</p>
+<ul>
+<li><code>process/{flow_alias|flow_name}/{output_name}</code></li>
+<li><code>process/{function_alias|function_name}/{output_name}</code></li>
+</ul>
+<a class="header" href="#data-sinks" id="data-sinks"><h3>Data sinks</h3></a>
+<p>Sinks for data which are valid for the <em>to</em> field of a connection are:</p>
+<p>Inside a flow:</p>
+<ul>
+<li><code>output/{output_name}</code></li>
+<li><code>value/{value_name}</code></li>
+</ul>
+<p>Referenced from a flow:</p>
+<ul>
+<li><code>process/{flow_alias|flow_name}/{input_name}</code></li>
+<li><code>process/{function_alias|function_name}/{input_name}</code></li>
+</ul>
+<p>TODO</p>
+<p>Using named outputs to destructure a JSON value or Array or Map</p>
+<a class="header" href="#complete-feature-list" id="complete-feature-list"><h2>Complete Feature List</h2></a>
+<p>This is a complete list of features implemented in the description of flows:</p>
+<ul>
+<li>Context Flow
+<ul>
+<li>Cannot have any outputs from this flow as there cannot be ay parent level</li>
+</ul>
+</li>
+<li>All FLows (Context and Children)
+<ul>
+<li>Can contain elements directly inside the context flow description</li>
+<li>Child flow inclusion from description in its own flow file in current project or different project</li>
+<li>Named outputs from child flow, referenced by parent flow for connections</li>
+</ul>
+</li>
+<li>Values to store intermediate values
+<ul>
+<li>Setting initial value of a Value at startup</li>
+<li>By default Values contents are consumer when read</li>
+<li>'static' Value who's contents are not consumed when read</li>
+</ul>
+</li>
+<li>Functions
+<ul>
+<li>With just inputs</li>
+<li>With just outputs</li>
+<li>With inputs and outputs</li>
+<li>Use of aliases to refer to functions with different names inside a flow</li>
+</ul>
+</li>
+<li>Use of Library Functions</li>
+<li>Providing a Custom function (in rust) with a flow</li>
+<li>Destructuring of output value into multiple named outputs</li>
+<li>Connections between outputs and inputs
+<ul>
+<li>Connections between inputs and outputs of functions, values, current flow and sub-flows</li>
+<li>Multiple connections to a single inputs (first arrived wins)</li>
+<li>Multiple connections from a single output (value is copied to all destinations)</li>
+<li>Connections to values don't require input name as only have one input</li>
+<li>Connections from values don't require output name as only have one output</li>
+<li>Functions with single input can have a connection to it without naming the input</li>
+<li>Functions with single output can have a connection from it without naming the output</li>
+</ul>
+</li>
+<li>Libraries of functions can be built and described, like flowstdlib, and referenced in flows</li>
+<li>Runtime functions for
+<ul>
+<li>Retrieving arguments from the flow's invocation</li>
+<li>STDIN/STDOUT/STDERR</li>
+<li>Retieving the value of Environment Variables</li>
+</ul>
+</li>
+</ul>
+<a class="header" href="#flow-libraries" id="flow-libraries"><h2>Flow Libraries</h2></a>
+<p>Functions and Flows can be defined as libraries and shared re-used by other flows.</p>
+<p>The runtime includes some basic ones in the <code>flowrlib</code> and <code>flowstdlib</code> libraries.</p>
+<p>Others can be shared by developers.</p>
+<p>The references to flows or functions specify a source, that will be searched for in a defined
+FLOWLOADPATH, that currently uses relative paths to the current flow's CWD.</p>
+<p>If the specified name is not found there, the load path will be searched for it.</p>
+<p>TODO</p>
+<p>Format and examples of how to reference library functions from flows</p>
+<a class="header" href="#running-flows" id="running-flows"><h2>Running Flows</h2></a>
+<a class="header" href="#run-the-fibonacci-example-flow" id="run-the-fibonacci-example-flow"><h3>Run the fibonacci example flow</h3></a>
+<p>From the project root you can run the fibonacci sample flow using:</p>
+<p><code>cargo run -- samples/fibonacci</code></p>
+<p>You should get a fibonacci series output to the terminal,
+followed by an &quot;ERROR&quot; on a panic, that is caused by integer overflow
+when the next number gets too big (don't worry, that's expected)</p>
+<a class="header" href="#flowc-command-line-arguments" id="flowc-command-line-arguments"><h2><code>flowc</code> Command Line Arguments</h2></a>
+<p><code>flowc</code> is the flow &quot;compiler&quot;, although that means something different in the case of flows.</p>
+<p>What it and other components do is described in more detail later in the <a href="../internals/overview.html">Internals</a> section.</p>
+<p>This section describes command line arguments that can be supplied to <code>flowc</code> and what they are useful for.</p>
+<a class="header" href="#getting-help" id="getting-help"><h3>Getting help</h3></a>
+<p>Use <code>-h, --help</code> (e.g. <code>flowc -h</code> or <code>cargo run flowc -h</code>) to print out help for the usage of <code>flowc</code>.</p>
+<p>This will print something like this:</p>
+<pre><code>flowc 0.4.0
+
+USAGE:
+    flowc [FLAGS] [OPTIONS] [ARGS]
+
+FLAGS:
+    -d, --dump       Dump the flow to standard output after loading it
+    -h, --help       Prints help information
+    -s, --skip       Skip code generation and running
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l, --log &lt;LOG_LEVEL&gt;        Set log level for output (trace, debug, info, warn, error (default))
+    -o, --output &lt;OUTPUT_DIR&gt;    Output directory for generated code
+
+ARGS:
+    &lt;FLOW&gt;            the name of the 'flow' file
+    &lt;flow_args&gt;...
+</code></pre>
+<p>Where the first line prints the binary name and the version number.</p>
+<a class="header" href="#flags-described" id="flags-described"><h3>Flags Described</h3></a>
+<ul>
+<li><code>-d, --dump</code> - Dumps a text representation of the the flow hierarchy to standard output after loading it</li>
+<li><code>-s, --skip</code> - Skip the code generation and running of the generated flow</li>
+<li><code>-V, --version</code>- Prints version information</li>
+</ul>
+<a class="header" href="#options-described" id="options-described"><h3>Options Described</h3></a>
+<ul>
+<li><code>-l, --log &lt;LOG_LEVEL&gt;</code>- Set log level for output (LOG_LEVEL can be <code>trace</code>, <code>debug</code>, <code>info</code>, <code>warn</code> or <code>error</code> (the default))</li>
+<li><code>-o, --output &lt;OUTPUT_DIR&gt;</code>- Specify the output directory for generated code. By default this is in a &quot;rust&quot;
+subdirectory of the the directory where the flow's context was loaded from</li>
+</ul>
+<a class="header" href="#flow-directory-or-filename" id="flow-directory-or-filename"><h3>Flow Directory or Filename</h3></a>
+<p>After Flags and Options you can supply an optional field for where to load the context flow from.</p>
+<ul>
+<li>By default this is the current directory.</li>
+<li>If it's a directory then it attempts to load &quot;context.toml&quot; from there</li>
+<li>If it's a file then it attempts to load &quot;context.toml&quot; from that file</li>
+</ul>
+<p>It can also be a URL to a flow context specification somewhere on the web. Currently supports http and http.</p>
+<a class="header" href="#arguments-for-the-flow" id="arguments-for-the-flow"><h3>Arguments for the flow</h3></a>
+<p>If a flow directory or filename is supplied, then any files after that are assumed to be command line arguments
+for the flow itself. WHen it starts executing it can retrieve the value of these paramters using functions
+in the runtime.</p>
+<a class="header" href="#passing-command-line-arguments" id="passing-command-line-arguments"><h3>Passing Command Line Arguments</h3></a>
+<p>Arguments are passed to the flow being executed by <code>flowc</code> by placing them after the flow name in
+the execution string (either using <code>cargo run</code> or <code>flowc</code> directly).
+e.g. <code>cargo run -- samples/mandlebrot mandel.png 4000x3000 -1.20,0.35 -1,0.20</code></p>
+<p>The flow runtime provides a function called <code>args</code> that can be included in a flow definition
+that fetches these arguments, allowing them to then be processed in the flow like any other inputs.</p>
+<p>Include the <code>args</code> function in your flow:</p>
+<pre><code>[[process]]
+alias = &quot;args&quot;
+source = &quot;lib://flkowr/args/get.toml&quot;
+</code></pre>
+<p>Then create a connection from the desired output of <code>args</code> to another function:</p>
+<pre><code>[[connection]]
+from = &quot;function/args/2&quot;
+to = &quot;function/parse_bounds/input&quot;
+</code></pre>
+<a class="header" href="#what-file-to-select-as-the-context" id="what-file-to-select-as-the-context"><h3>What file to select as the Context?</h3></a>
+<p><code>flowc</code> determines the flow to run using one of these three methods:</p>
+<ul>
+<li>no filename or directory passed, so it looks for &quot;context.toml&quot; in the current directory</li>
+<li>a filename or directory is passed:
+<ul>
+<li>if the parameter passed is a firectory, it looks for &quot;context.toml&quot; in that directory</li>
+<li>if a filename is passed, it uses that as the flow to load</li>
+</ul>
+</li>
+</ul>
+<p>Then it tries to load the flow hierarchy from the context flow found, or reports an error if
+none was found.</p>
+<p>TODO: Document URL format and lack of folder option.</p>
+<a class="header" href="#standard-input" id="standard-input"><h3>Standard Input</h3></a>
+<p>The flow runtime provides functions to read from STDIN. You can pipe input to the flow by piping
+it to the <code>cargo run</code> or <code>flowc</code> command line used to execute the flow.</p>
+<p>If not piped in, then the runtime will attempt to read STDIN, blocking that function until input
+(or EOF) is provided. If input is read then it will be passed on by that function at it's output.
+The function will indicate to the runtime that it should be run again (to read more lines of STDIN)
+and it will be re-added to the ready list and executed again later.</p>
+<p>When EOF is detected, that function will indicate to the runtime that it does not want to be run again
+and will not be added back to the ready list for re-execution.</p>
+<a class="header" href="#standard-output--standard-error" id="standard-output--standard-error"><h3>Standard Output &amp; Standard Error</h3></a>
+<p>The flow runtime provides functions to send output to STDOUT/STDERR. This output is printed on
+stdout or stderr of the process that executed the <code>cargo run</code> or <code>flowc</code> command to execute the flow.</p>
+<a class="header" href="#exceptions-and-panics" id="exceptions-and-panics"><h3>Exceptions and Panics</h3></a>
+<p>Currently, there are no special provisions for handling or recovering from runtime exceptions.
+The functions are implemented in rust and when they fail they will panic as usual in rust.</p>
+<p>The runtime does catch the panic, report it via an ERROR log statement, with details, and then exit.</p>
+<a class="header" href="#sample-flows" id="sample-flows"><h2>Sample flows</h2></a>
+<p>The project includes a number of sample 'flows' that have been developed during the development
+of the compiler and the run-time itself to drive the project development and then to demonstrate
+it working, and laterly as a type of regression test to make sure we don't break any of the
+semantics that the samples rely on.</p>
+<p>They range from the extremely simple &quot;hello-world&quot; example to more complex ones like generation of
+a fibonacci series, and others are in different stages of development and driving the needs for new
+primitive functions and flow semantics.</p>
+<p>They are contained in the samples folder in the code.
+<a href="https://github.com/andrewdavidmackenzie/flow/tree/master/samples">Github link</a></p>
+<a class="header" href="#structure-of-each-sample" id="structure-of-each-sample"><h3>Structure of each sample</h3></a>
+<p>Each sample resides in it's own sub-folder of 'samples', and each one contains:</p>
+<ul>
+<li>A DESCRIPTION.md file that:
+<ul>
+<li>describes what it does</li>
+<li>lists the features of 'flow' that this sample uses and demonstrates</li>
+</ul>
+</li>
+<li>A <code>context.toml</code> file that is the root file of the flow description</li>
+<li>Files used in the automated testing of each sample:
+<ul>
+<li><code>test_arguments.txt</code> the arguments to be passed to the flow when running it</li>
+<li><code>test_input.txt</code> the input supplied to the flow when running it</li>
+<li><code>expected_output.txt</code> the output that the flow is expected to produce when invoked with
+&quot;text_arguments.txt&quot; and input &quot;test_input.txt&quot;</li>
+</ul>
+</li>
+</ul>
+<a class="header" href="#first" id="first"><h1>first</h1></a>
+<a class="header" href="#description" id="description"><h1>Description</h1></a>
+<p>Very simple first flow used to demonstrate a simple flow that actually does something, and who's execution can be followed
+step-by-step by a human.</p>
+<p>It generates a series of numbers and prints it out on <code>stdout</code>, as per diagram below:</p>
+<p>See the 'Understanding it' section in the guide to understand
+what this flow does and a 'step-by-step walkthrough' of its execution.</p>
+<a class="header" href="#features-used" id="features-used"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>Values to store intermediate values</li>
+<li>Setting initial value of a Value at startup</li>
+<li>Multiple connections into and out of functions and values</li>
+<li>Library Functions used (<code>stdout</code> and <code>add</code> from <code>flowstdlib</code>) to print a value and to add two numbers</li>
+<li>Use of aliases to refer to functions with different names</li>
+<li>Connections between functions and values</li>
+<li>Referring to a function's input by name in connections</li>
+</ul>
+<a class="header" href="#echo" id="echo"><h1>echo</h1></a>
+<a class="header" href="#description-1" id="description-1"><h1>Description</h1></a>
+<p>A trivial flow that takes a line on <code>stdin</code>, and prints it on <code>stdout</code></p>
+<a class="header" href="#features-used-1" id="features-used-1"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>Library Functions used (<code>stdin</code> and <code>stdout</code> from <code>flowstdlib</code>)</li>
+<li>Connections between functions</li>
+</ul>
+<a class="header" href="#fibonacci" id="fibonacci"><h1>fibonacci</h1></a>
+<a class="header" href="#description-2" id="description-2"><h1>Description</h1></a>
+<p>A flow that generates a Fibonacci series of numbers and prints it out on <code>stdout</code>.</p>
+<a class="header" href="#features-used-2" id="features-used-2"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>Child flow described separately, with named outputs to parent flow</li>
+<li>Connections between Input/Outputs of parent/child flows</li>
+<li>Values to store intermediate values</li>
+<li>Setting initial value of a Value at startup</li>
+<li>Multiple connections into and out of functions and values</li>
+<li>Library Functions used (<code>toString</code> and <code>add</code> from <code>flowstdlib</code>) to convert Number to String and to add numbers</li>
+<li>Use of aliases to refer to functions with different names inside a flow</li>
+<li>Connections between flows, functions and values</li>
+</ul>
+<a class="header" href="#hello-world-include" id="hello-world-include"><h1>hello-world-include</h1></a>
+<a class="header" href="#description-3" id="description-3"><h1>Description</h1></a>
+<p>A simple flow that prints &quot;Hello World!&quot; on <code>stdout</code> using a sub-flow from another directory/project</p>
+<a class="header" href="#features-used-3" id="features-used-3"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>A nested flow included from a separate file in a different project folder</li>
+<li>A String value that is initialized at start-up</li>
+<li>Library Functions used (<code>stdout</code> from <code>flowstdlib</code>)</li>
+<li>Connections between a named output of the sub-flow and a function</li>
+</ul>
+<a class="header" href="#hello-world-simple" id="hello-world-simple"><h1>hello-world-simple</h1></a>
+<a class="header" href="#description-4" id="description-4"><h1>Description</h1></a>
+<p>The simplest possible &quot;Hello World!&quot; example with 'flow'.</p>
+<a class="header" href="#features-used-4" id="features-used-4"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>A String value that is initialized at start-up</li>
+<li>Library Functions used (<code>stdout</code> from <code>flowstdlib</code>)</li>
+<li>A connection between the value and the function</li>
+</ul>
+<a class="header" href="#hello-world" id="hello-world"><h1>hello-world</h1></a>
+<a class="header" href="#description-5" id="description-5"><h1>Description</h1></a>
+<p>A simple flow that prints &quot;Hello World!&quot; on <code>stdout</code></p>
+<a class="header" href="#features-used-5" id="features-used-5"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>A nested flow from a separate file in the same project</li>
+<li>A String value that is initialized at start-up</li>
+<li>Library Functions used (<code>stdout</code> from <code>flowstdlib</code>)</li>
+<li>Connection between a named output of the sub-flow and the function's input</li>
+</ul>
+<a class="header" href="#line-echo" id="line-echo"><h1>line-echo</h1></a>
+<a class="header" href="#description-6" id="description-6"><h1>Description</h1></a>
+<p>The flow that reads a single line from STDIN and prints it out on STDOUT</p>
+<a class="header" href="#features-used-6" id="features-used-6"><h1>Features Used</h1></a>
+<ul>
+<li>Context Flow</li>
+<li>Library Functions used (<code>readlin</code> and <code>stdout</code> from <code>flowstdlib</code>)</li>
+<li>A named connection between one function and another function</li>
+</ul>
+<a class="header" href="#flow-standard-library" id="flow-standard-library"><h2>Flow Standard Library</h2></a>
+<p>This is the standard library of functions that is part of flow and made available to
+all flows by the runtime.</p>
+<p>It is organized into the following modules, each with multiple functions</p>
+<ul>
+<li>control - control the flow of data between functions and values</li>
+<li>env</li>
+<li>fmt</li>
+<li>img</li>
+<li>math</li>
+<li>stdio</li>
+</ul>
+<a class="header" href="#control-flowstdlibcontrol" id="control-flowstdlibcontrol"><h2>Control (//flowstdlib/control)</h2></a>
+<p>Functions to control the flow of data on connections between other processing functions</p>
+<ul>
+<li><a href="compare.html">compare</a></li>
+<li><a href="pass_if_lte.html">pass_if_lte</a></li>
+</ul>
+<a class="header" href="#tap-flowstdlibcontroltaptoml" id="tap-flowstdlibcontroltaptoml"><h2>Tap (//flowstdlib/control/tap.toml)</h2></a>
+<p>Control the flow of data (flow or disapear it) based on a boolean control value.</p>
+<a class="header" href="#include-using" id="include-using"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;tap&quot;
+source = &quot;lib://flowstdlib/control/tap.toml&quot;
+</code></pre>
+<a class="header" href="#inputs" id="inputs"><h4>Inputs</h4></a>
+<ul>
+<li><code>data</code> - the data flow we wish to control the flow if</li>
+<li><code>control</code> - a boolean value to determine in <code>data</code> is passed on or not</li>
+</ul>
+<a class="header" href="#outputs" id="outputs"><h4>Outputs</h4></a>
+<ul>
+<li><code>data</code> if <code>control</code> is true, nothing if <code>control</code> is false</li>
+</ul>
+<a class="header" href="#compare-flowstdlibcontrolcomparetoml" id="compare-flowstdlibcontrolcomparetoml"><h2>Compare (//flowstdlib/control/compare.toml)</h2></a>
+<p>Compare two input values and output different boolean values depending on if the comparison
+is equal, greater than, greater than or equal, less than or less than or equal.</p>
+<a class="header" href="#include-using-1" id="include-using-1"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;compare&quot;
+source = &quot;lib://flowstdlib/control/compare.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-1" id="inputs-1"><h4>Inputs</h4></a>
+<ul>
+<li><code>left</code> - left hand input</li>
+<li><code>right</code> - right hand input</li>
+</ul>
+<a class="header" href="#outputs-1" id="outputs-1"><h4>Outputs</h4></a>
+<ul>
+<li><code>equal</code> [Boolean] - outputs true if the two values are equal</li>
+<li><code>lt</code> [Boolean] - outputs true if the left hand value is less than the right hand value</li>
+<li><code>lte</code> [Boolean] - outputs true if the left hand value is less than or equal to the right hand value</li>
+<li><code>gt</code> [Boolean] - outputs true if the left hand value is greater than the right hand value</li>
+<li><code>gte</code> [Boolean] - outputs true if the left hand value is greater than or equal to the right hand value</li>
+</ul>
+<a class="header" href="#fmt-flowstdlibfmt" id="fmt-flowstdlibfmt"><h2>Fmt (//flowstdlib/fmt)</h2></a>
+<p>Functions for the formatting of values and conversion from one type to another.</p>
+<a class="header" href="#to-number-flowstdlibfmtto_numbertoml" id="to-number-flowstdlibfmtto_numbertoml"><h2>To Number (//flowstdlib/fmt/to_number.toml)</h2></a>
+<p>Convert a String to a number</p>
+<a class="header" href="#include-using-2" id="include-using-2"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;to_number&quot;
+source = &quot;lib://flowstdlib/fmt/to_number.toml&quot;
+</code></pre>
+<a class="header" href="#input" id="input"><h4>Input</h4></a>
+<ul>
+<li>The String to convert</li>
+</ul>
+<a class="header" href="#output" id="output"><h4>Output</h4></a>
+<ul>
+<li>The Number equivalent of String input if possible</li>
+</ul>
+<a class="header" href="#to-number-flowstdlibfmtto_numbertoml-1" id="to-number-flowstdlibfmtto_numbertoml-1"><h2>To Number (//flowstdlib/fmt/to_number.toml)</h2></a>
+<p>Convert an input type to a String</p>
+<a class="header" href="#input-1" id="input-1"><h4>Input</h4></a>
+<ul>
+<li>The data to convert to a String. Current types supported are:</li>
+<li>String - a bit redundant, but it works</li>
+<li>Bool - Boolean JSON value</li>
+<li>Number - A JSON Number</li>
+<li>Array - An JSON array of values that can be converted, they are converted one by one</li>
+</ul>
+<a class="header" href="#output-1" id="output-1"><h4>Output</h4></a>
+<ul>
+<li>The String equivalent of the input value</li>
+</ul>
+<a class="header" href="#img-flowstdlibimg" id="img-flowstdlibimg"><h2>Img (//flowstdlib/img)</h2></a>
+<p>Functions for image manipulation and encoding.</p>
+<a class="header" href="#formatbitmap-flowstdlibimgformat_pngtoml" id="formatbitmap-flowstdlibimgformat_pngtoml"><h2>FormatBitmap (//flowstdlib/img/format_png.toml)</h2></a>
+<p>Format a series of bytes into a PNG image, for use in display or writing to a file</p>
+<a class="header" href="#include-using-3" id="include-using-3"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;format&quot;
+source = &quot;lib://flowstdlib/img/format_bitmap.toml&quot;
+</code></pre>
+<a class="header" href="#input-2" id="input-2"><h4>Input</h4></a>
+<ul>
+<li><code>bytes</code> - the bytes to encode as a bitmap</li>
+<li><code>bounds</code> - Json with width and depth of the image the bytes represent</li>
+</ul>
+<a class="header" href="#output-2" id="output-2"><h4>Output</h4></a>
+<ul>
+<li>(default) - The bytes representing the PNG encoding of the image, as a String</li>
+</ul>
+<a class="header" href="#math-flowstdlibmath" id="math-flowstdlibmath"><h2>Math (//flowstdlib/math)</h2></a>
+<p>Math Functions, currently:</p>
+<ul>
+<li><a href="add.html">add</a></li>
+<li><a href="subtract.html">subtract</a></li>
+<li><a href="divide.html">divide</a></li>
+</ul>
+<a class="header" href="#add-flowstdlibmathaddtoml" id="add-flowstdlibmathaddtoml"><h2>Add (//flowstdlib/math/add.toml)</h2></a>
+<p>Add two inputs to produce a new output</p>
+<a class="header" href="#include-using-4" id="include-using-4"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;add&quot;
+source = &quot;lib://flowstdlib/math/add.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-2" id="inputs-2"><h4>Inputs</h4></a>
+<ul>
+<li><code>i1</code> - first input of type <code>Number</code></li>
+<li><code>i2</code> - second input of type <code>Number</code></li>
+</ul>
+<a class="header" href="#outputs-2" id="outputs-2"><h4>Outputs</h4></a>
+<ul>
+<li>Sum of <code>i1</code> and <code>i2</code> of type <code>Number</code></li>
+</ul>
+<a class="header" href="#subtract-flowstdlibmathsubtracttoml" id="subtract-flowstdlibmathsubtracttoml"><h2>Subtract (//flowstdlib/math/subtract.toml)</h2></a>
+<p>Subtract one input from another to produce a new output</p>
+<a class="header" href="#include-using-5" id="include-using-5"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;subtract&quot;
+source = &quot;lib://flowstdlib/math/subtract.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-3" id="inputs-3"><h4>Inputs</h4></a>
+<ul>
+<li><code>i1</code> - first input of type <code>Number</code></li>
+<li><code>i2</code> - second input of type <code>Number</code></li>
+</ul>
+<a class="header" href="#outputs-3" id="outputs-3"><h4>Outputs</h4></a>
+<ul>
+<li><code>i1</code> minus <code>i2</code> of type <code>Number</code></li>
+</ul>
+<a class="header" href="#divide-flowstdlibmathdividetoml" id="divide-flowstdlibmathdividetoml"><h2>Divide (//flowstdlib/math/divide.toml)</h2></a>
+<p>Divide one input by another, producing outputs for the dividend, divisor, result and the remainder</p>
+<a class="header" href="#include-using-6" id="include-using-6"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;divide&quot;
+source = &quot;lib://flowstdlib/math/divide.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-4" id="inputs-4"><h4>Inputs</h4></a>
+<ul>
+<li><code>dividend</code> - the number to be divided, of type <code>Number</code></li>
+<li><code>divisor</code> - the number to divide by, of type <code>Number</code></li>
+</ul>
+<a class="header" href="#outputs-4" id="outputs-4"><h4>Outputs</h4></a>
+<ul>
+<li><code>dividend</code> - re output the <code>dividend</code> input, of type <code>Number</code></li>
+<li><code>divisor</code> - re output the <code>divisor</code> input, of type <code>Number</code></li>
+<li><code>result</code> - the result of the division, of type <code>Number</code></li>
+<li><code>remainder</code> - the remainder of the division, of type <code>Number</code></li>
+</ul>
+<a class="header" href="#flow-runtime-library" id="flow-runtime-library"><h2>Flow Runtime Library</h2></a>
+<p>This is the runtime library of flow.</p>
+<p>It handles the execution of runnables according to the semantics defined.</p>
+<a class="header" href="#runtime-functions" id="runtime-functions"><h3>Runtime functions</h3></a>
+<p>Additionally, it provides a number of standard, impure (have side effects or do IO), functions to
+flows to help them interact with the environment they run in.</p>
+<p>Those functions are organized into the following modules, each with multiple functions:</p>
+<ul>
+<li>env</li>
+<li>stdio</li>
+<li>file</li>
+</ul>
+<a class="header" href="#args-flowrargs" id="args-flowrargs"><h2>Args (//flowr/args)</h2></a>
+<p>Functions to handle runtime arguments, command line arguments from invocation, etc</p>
+<a class="header" href="#args-flowrargsgettoml" id="args-flowrargsgettoml"><h2>Args (//flowr/args/get.toml)</h2></a>
+<p>Get the arguments the flow was executed with</p>
+<a class="header" href="#include-using-7" id="include-using-7"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;get&quot;
+source = &quot;lib://flowr/args/get.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-5" id="inputs-5"><h4>Inputs</h4></a>
+<a class="header" href="#output-3" id="output-3"><h4>Output</h4></a>
+<ul>
+<li>Array of Strings of the command line arguments the flow was invoked with.</li>
+</ul>
+<a class="header" href="#file-flowrfile" id="file-flowrfile"><h2>File (//flowr/file)</h2></a>
+<p>Functions to interact with the Environment, related to file input and output.</p>
+<a class="header" href="#write-flowrfilewritetoml" id="write-flowrfilewritetoml"><h2>Write (//flowr/file/write.toml)</h2></a>
+<p>Writes <code>bytes</code> of data supplied to the file named <code>filename</code>, creating it if necessary.</p>
+<a class="header" href="#include-using-8" id="include-using-8"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;write&quot;
+source = &quot;lib://flowr/file/write.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-6" id="inputs-6"><h4>Inputs</h4></a>
+<ul>
+<li><code>bytes</code> - the data to be written to the file</li>
+<li><code>filename</code> - String with the name of the file to be written, absolute or relative to the current working
+directory of the process invoking the flow.</li>
+</ul>
+<a class="header" href="#outputs-5" id="outputs-5"><h4>Outputs</h4></a>
+<a class="header" href="#stdio-flowrstdio" id="stdio-flowrstdio"><h2>Stdio (//flowr/stdio)</h2></a>
+<p>Functions to interact with the Environment, related to standard input and output (and error).</p>
+<p>The values sent to these functions are read from standard input of the process that launched the flow
+causing the function to block until input (or EOF) is detected. Output is printed on the STDOUT/STDERR
+of the process invoking the flow.</p>
+<a class="header" href="#readline-flowrstdioreadlinetoml" id="readline-flowrstdioreadlinetoml"><h2>Readline (//flowr/stdio/readline.toml)</h2></a>
+<p>Read a line of text from the STDIN of the process invoking the flow. The line is terminated by EOL
+but leading and trailing whitespace are trimmed before being output.</p>
+<p>The function will be scheduled for running again, until EOF is detected, after which it will not run
+again.</p>
+<a class="header" href="#include-using-9" id="include-using-9"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;readline&quot;
+source = &quot;lib://flowr/stdio/readline.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-7" id="inputs-7"><h4>Inputs</h4></a>
+<a class="header" href="#output-4" id="output-4"><h4>Output</h4></a>
+<ul>
+<li>Line of text read from STDIN - with leading and trailing whitespace trimmed.</li>
+</ul>
+<a class="header" href="#stdin-flowrstdiostdintoml" id="stdin-flowrstdiostdintoml"><h2>Stdin (//flowr/stdio/stdin.toml)</h2></a>
+<p>Read text from the STDIN of the process invoking the flow until EOF is detected, after which it will not run
+again.</p>
+<a class="header" href="#include-using-10" id="include-using-10"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;stdin&quot;
+source = &quot;lib://flowr/stdio/stdin.toml&quot;
+</code></pre>
+<a class="header" href="#inputs-8" id="inputs-8"><h4>Inputs</h4></a>
+<a class="header" href="#output-5" id="output-5"><h4>Output</h4></a>
+<ul>
+<li>Text read from STDIN - with leading and trailing whitespace (including EOF) trimmed.</li>
+</ul>
+<a class="header" href="#stdout-flowrstdiostdouttoml" id="stdout-flowrstdiostdouttoml"><h2>Stdout (//flowr/stdio/stdout.toml)</h2></a>
+<p>Output text to the STDOUT of the process invoking the flow. If an array is passed then each element
+is output on a separate line.</p>
+<a class="header" href="#include-using-11" id="include-using-11"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;stdout&quot;
+source = &quot;lib://flowr/stdio/stdout.toml&quot;
+</code></pre>
+<a class="header" href="#input-3" id="input-3"><h4>Input</h4></a>
+<ul>
+<li>(default) - the object to output a String representation of (String, Boolean, Number, Array)</li>
+</ul>
+<a class="header" href="#output-6" id="output-6"><h4>Output</h4></a>
+<a class="header" href="#stderr-flowrstdiostderrtoml" id="stderr-flowrstdiostderrtoml"><h2>Stderr (//flowr/stdio/stderr.toml)</h2></a>
+<p>Output text to the STDERR of the process invoking the flow. If an array is passed then each element
+is output on a separate line.</p>
+<a class="header" href="#include-using-12" id="include-using-12"><h4>Include using</h4></a>
+<pre><code>[[process]]
+alias = &quot;stderr&quot;
+source = &quot;lib://flowr/stdio/stderr.toml&quot;
+</code></pre>
+<a class="header" href="#input-4" id="input-4"><h4>Input</h4></a>
+<ul>
+<li>(default) - the object to output a String representation of (String, Boolean, Number, Array)</li>
+</ul>
+<a class="header" href="#output-7" id="output-7"><h4>Output</h4></a>
+<a class="header" href="#developing-flow" id="developing-flow"><h2>Developing flow</h2></a>
+<a class="header" href="#supported-operating-systems" id="supported-operating-systems"><h3>Supported Operating Systems</h3></a>
+<p>The CI tests for 'flow' run on Mac OS X and Linux. Others may well work as rust projects are pretty
+portable but I develop on Mac OS X and don't know the status on other OS.</p>
+<a class="header" href="#pre-requisites-required-to-build-and-test" id="pre-requisites-required-to-build-and-test"><h2>Pre-requisites required to build and test</h2></a>
+<p>These are the pre-requisites that are required to build and test 'flow':</p>
+<ul>
+<li>rust toolchain (rustup, cargo, rustc via rustup, etc )
+<ul>
+<li>nightly (still, due to wasm-bindgen), and stable</li>
+<li>wasm32-unknown-unknown target for building wasm</li>
+</ul>
+</li>
+</ul>
+<p>For generating JS to wasm bindings:
+<code>wasm-bindgen-cli</code></p>
+<p>For building the guide:
+<code>mdbook</code> and its <code>mdbook-linkcheck</code></p>
+<a class="header" href="#installing-pre-requisites" id="installing-pre-requisites"><h2>Installing pre-requisites</h2></a>
+<p>You have to install rustup, cargo and rust native toolchain yourself, I decided to stop
+short of futzing with people's installed compilers via scripts and Makefile targets.</p>
+<p>There is a Makefile target 'config' that will attempt to install remaining dependencies most
+rust developers might not already have.</p>
+<ul>
+<li><code>make config</code></li>
+</ul>
+<p>That will add the wasm32-unknown-unknown target, install wasm-bindgen-cli, mdbook and mdbook-linkcheck
+using cargo</p>
+<a class="header" href="#important-make-targets" id="important-make-targets"><h2>Important make targets</h2></a>
+<ul>
+<li>(default) <code>make</code> will build, run local tests and generate docs.</li>
+<li><code>make build-guide</code> will just generate the HTML for the guide if you are writing docs. But better
+would be to just <code>cd guide &amp;&amp; mdbook serve</code> as that will track and update the generated content as
+you make changes, allowing you to view them instantly with a browser refresh.</li>
+<li><code>make test</code> this should be what you run to check changes you have made work OK. At the moment it is the
+same as 'make travis' until I re-instate some tests I was having issues with.</li>
+</ul>
+<a class="header" href="#other-less-important-make-targets" id="other-less-important-make-targets"><h2>Other less important make targets</h2></a>
+<ul>
+<li>
+<p><code>make package</code> this will prepare 'flowc' for publishing to crates.io, but this shouldn't be needed by
+most people. It should also package the electron app (when I fix that!).</p>
+</li>
+<li>
+<p><code>make clean</code> this will clean all generated files that 'cargo' knows about as well as the generated code and test
+output files for each of the samples, and should leave everything clean.</p>
+</li>
+</ul>
+<a class="header" href="#contributing" id="contributing"><h2>Contributing</h2></a>
+<p>There are many ways of contributing</p>
+<ul>
+<li>adding an issue with a bug report of an enhancement request or new feature idea</li>
+<li>pick up a <a href="https://github.com/andrewdavidmackenzie/flow/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22">help wanted</a> issue and try and fix it</li>
+<li>adding to or correcting the docs and this guide</li>
+<li>adding a new sample</li>
+<li>improvements to the libraries, compiler, standard library, runtime</li>
+<li>improvements to unit or integration tests</li>
+<li>improvements to build processes (e.g. getting coverage reports working etc)</li>
+</ul>
+<a class="header" href="#issues" id="issues"><h3>Issues</h3></a>
+<p>Issues can be found in the <a href="https://github.com/andrewdavidmackenzie/flow/issues">repo</a>, if you are not yet a
+project contributor then just add a comment to one to say you'd like to work on it and I will avoid doing
+the same.</p>
+<p>Adding new issues you find can also be helpful, although with my limited time on the project, fixing issues
+and sending PRs are more welcome! :-)</p>
+<a class="header" href="#prs" id="prs"><h3>PRs</h3></a>
+<p>If you want to contribute a code or test or docs or tolling change....</p>
+<ul>
+<li>if no existing issue exists for it, create one so we can agree on what to do before starting (a good idea
+to make later PR merges easier to accept I think!)</li>
+<li>if an issue exists alread add a comment to it so I know you want to work on it</li>
+<li>fork the repo</li>
+<li>create a branch for the issue in your repo</li>
+<li>make your changes and update tests, docs and samples as required</li>
+<li>run tests ('make travis') before pushing to your branch</li>
+<li>wait for Travis to pass</li>
+<li>submit the PR, referencing the issue is a good ideas</li>
+</ul>
+<a class="header" href="#developing-a-sample" id="developing-a-sample"><h3>Developing a sample</h3></a>
+<p>To develop a new sample, just create a new folder under 'samples' with your sample name.</p>
+<p>Add the context.toml and any other included flows and describe them.</p>
+<p>Add a DESCRIPTION.md file that describes what the sample does and what features of flow it uses.</p>
+<p>Add an entry in the guide's &quot;samples&quot; section that will include the DESCRIPTION.md file above.</p>
+<p>The Makefile will automatically discover it and attemtp to test it using the following files which
+you should add:</p>
+<ul>
+<li>test_arguments.txt - arguments passed to the flow on the command line when executing it</li>
+<li>test_input.txt - test input to send to the sample flow using STDIN</li>
+<li>expected_output.txt - the output you expect to be sent to STDOUT by the flow when running correctly</li>
+</ul>
+<a class="header" href="#test-the-new-sample" id="test-the-new-sample"><h3>Test the new sample</h3></a>
+<p>From the root project folder you can ask make to test just this sample using:
+<code>make samples/{new_sample_folder}/test_output.txt</code></p>
+<p>Make will compile and generate the sample flow, then run it using the arguments supplied in the test_arguments.txt
+file, sending it the input found in the test_input.txt file and capturing the output in test_output.txt
+file and finally comparing that output to the expected correct output specified in expected_output.txt.</p>
+<p>That make target depends on the 'compiler' Makefile target, so it will recompile 'flowc' and any
+dependencies before it compiles, generates, builds and tests the sample in question.</p>
+<p>You can debug the execution of a flow using the method described in 'Debugging your first flow' section
+in the guide.</p>
+<a class="header" href="#continuous-integration-testing-of-flow" id="continuous-integration-testing-of-flow"><h3>Continuous Integration testing of flow</h3></a>
+<p>The CI build and test run in Travis on each push to a branch or PR can be run locally
+using <code>make travis</code>.</p>
+<p>These tests include unit and integration tests, rust doc-tests and it also compiles, generates, runs and checks the
+output of all the samples found in the ./samples folder.</p>
+<p>This will also rebuild the guide in local.</p>
+<p>I recommend making sure this runs fine and passes before pushing to GitHub.</p>
+<a class="header" href="#internals-overview" id="internals-overview"><h2>Internals Overview</h2></a>
+<p>In this section we provide some more details on what flowc does when you use it to compile, generate, build and run a flow.</p>
+<p>The process includes these areas described in more detail in the following pages:</p>
+<ul>
+<li>Flow loading: the process of reading in the flow description and building an internal representation of it</li>
+<li>Flow compiling: take hierachical flows representation loaded from previous stage and &quot;compile down&quot; to one more
+suited for project for flow project generation for execution.</li>
+<li>Flow execution: The generated project is loaded by the generic runtime library (flowrlib) and the
+runnables (functions and values) are executed in turn.</li>
+</ul>
+<a class="header" href="#flow-loading" id="flow-loading"><h2>Flow Loading</h2></a>
+<p>Read in the hierarchical definition, recursively reading all nested flows until everything loaded.</p>
+<p>Build the connections between values, functions, input and outputs using the
+unaliased routes to functions and subflows.</p>
+<p>Check that the from/to types on connections match.</p>
+<a class="header" href="#flow-compiling" id="flow-compiling"><h2>Flow Compiling</h2></a>
+<p>From the hierarchical definition of a flow program produced by the loading stage:</p>
+<a class="header" href="#connection-reducing" id="connection-reducing"><h3>Connection Reducing</h3></a>
+<p>Build a flat table of connections.</p>
+<p>For every connection that ends at a flow:</p>
+<ul>
+<li>Look through all other connections and for each one that starts where this flow starts:
+<ul>
+<li>Replace the connection's destination with this connections destination.</li>
+<li>Delete this connection</li>
+</ul>
+</li>
+</ul>
+<p>When done there should be no connections ending at flows.
+Any connections left that starts at a flow, is unconnected and can be deleted.</p>
+<a class="header" href="#value-and-function-tables" id="value-and-function-tables"><h3>Value and Function Tables</h3></a>
+<p>Build a table of values and functions.</p>
+<a class="header" href="#pruning-value-and-function-tables" id="pruning-value-and-function-tables"><h3>Pruning Value and Function Tables</h3></a>
+<p>Drop the following combinations, with warnings:</p>
+<ul>
+<li>values that don't have connections from them.</li>
+<li>values that have only outputs and are not initialized.</li>
+<li>functions that don't have connections from their output.</li>
+<li>functions that don't have connections to all their inputs.</li>
+</ul>
+<a class="header" href="#flow-execution" id="flow-execution"><h2>Flow Execution</h2></a>
+<a class="header" href="#lazy-execution" id="lazy-execution"><h3>Lazy Execution</h3></a>
+<p>Execution should be as lazy as possible.</p>
+<p>The only thing that determines if a function is run is the availability at it's inputs of the data
+it needs to run, and the ability to produce the result at it's output by having the output free.</p>
+<p>If the output is free because a second function is running and hasn't consumed it's input, then
+the first function will be blocked and computing resources will be used on the functions that most
+need it. When they complete and produce an output, that output may satisfy another functions's
+inputs which in turn will run, and so on and so forth.</p>
+<a class="header" href="#execution-states" id="execution-states"><h3>Execution States</h3></a>
+<p>Runnables (Values and Functions) can be in one of two states:</p>
+<ul>
+<li>blocked (either pending an input or output is blocked)</li>
+<li>runnable (inputs are satisfied, output is free and it can be run anytime)</li>
+</ul>
+<a class="header" href="#value-rules" id="value-rules"><h3>Value Rules</h3></a>
+<p>A Value has only one input, but that can be connected to and a value offered by multiple &quot;writers&quot;.
+It has only one output, but that can be connected to and listened on by multiple &quot;listeners&quot;</p>
+<p>It stores a value, that can be initialized when the program is loaded to an initial value.</p>
+<p>When the value is empty it can be updated.
+When it is updated, the value is made available to all &quot;listeners&quot; at it's output.
+While it stores a value, it cannot be updated, and any writer will be blocked until the value is
+consumed and can be updated again.</p>
+<p>Each of the listeners can read or &quot;consume&quot; the value once.</p>
+<p>When it has been consumed by all listeners, the value becomes empty (None) and can be updated again.
+It does not become empty until all listeners have consumed the value.</p>
+<p>You can think of Values as a FIFO of size 1 for each listener connected to it.</p>
+<a class="header" href="#function-rules" id="function-rules"><h3>Function Rules</h3></a>
+<p>The operation of a Function is similar to that of a value, except that it can have multiple inputs
+and it is not run until they are all satisfied.</p>
+<p>A function does not store any value or state, beyond making it's output available to listeners
+asynchronously.</p>
+<p>A Function can have zero or more inputs.
+Each input can be connected to and written to by multiple &quot;writers&quot;.
+It has only one output, but that can be connected to and listened to by multiple &quot;listeners&quot;.</p>
+<p>A Function can only run when a value is available at each of it's inputs and it's output is
+free to write to.. It is blocked from running until these conditions are met.</p>
+<p>When a function runs, it produces an output that is made available to all &quot;listeners&quot; at it's output.</p>
+<p>Each of the listeners can read or &quot;consume&quot; the output value once.</p>
+<a class="header" href="#generalized-rules" id="generalized-rules"><h3>Generalized Rules</h3></a>
+<p>If we consider a value to be like a null function that does no calculation, but just passes the input
+value to it's outputs - then we can state some general rules that apply to the &quot;running&quot; of both.</p>
+<ul>
+<li>Can have zero or more inputs (max 1 for a Value)</li>
+<li>Each input can be connected to and values offered to it by multiple &quot;writers&quot;.</li>
+<li>Has one output, that can be listened on by multiple &quot;listeners&quot;.</li>
+<li>Can only be run (updated) when a value is available at each of the inputs and the output is
+free to write to. Is blocked from running until these conditions are met.</li>
+<li>When ran, it produces an output that is made available to all &quot;listeners&quot; at it's output.</li>
+<li>Each of the listeners can read or &quot;consume&quot; the output value only once.</li>
+<li>Once the output has been consumed (once) by all the listeners, then the output is free to be
+written to again.</li>
+</ul>
+<a class="header" href="#executuion-process" id="executuion-process"><h2>Executuion Process</h2></a>
+<a class="header" href="#loading" id="loading"><h3>Loading</h3></a>
+<p>All functions and values are loaded.</p>
+<a class="header" href="#initialization" id="initialization"><h3>Initialization</h3></a>
+<p>Any values with initial values are initialized with them and hence make them available on their
+output, and hence they are made available on the input of all connected objects (values and functions).</p>
+<p>Now, the execution loop can be started.</p>
+<a class="header" href="#execution-loop-1" id="execution-loop-1"><h3>Execution Loop</h3></a>
+<p>Next ready Runnable is run</p>
+<ul>
+<li>Next runnable (function/value) on the read list is run
+<ul>
+<li>this consumes all its inputs
+<ul>
+<li>this may unblock another runnable which was blocked sending to this runnables as it's input was full</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Any data produced is made available on the output</li>
+<li>Outputs are made available to all connected inputs on other runnables
+<ul>
+<li>The data on any ouput is made available to all connected inputs, copied if necessary to multiple.</li>
+<li>This may satisfy the inputs of the other runnable, causing it to be added to the ready list</li>
+</ul>
+</li>
+</ul>
+<a class="header" href="#parallel-execution" id="parallel-execution"><h3>Parallel Execution</h3></a>
+<p>A core goal of 'flow' is to enable parallel execution of programs, with the parallelism being described
+inherently in the flow description, via data dependencies and functions with zero side effects.</p>
+<p>Currently, the runtime only executes one runnable at a time, but that is destined to change as soon
+as it can be implemented, both in multiple threads in the same process on one machine, then multiple
+processes on one machine and then across machines across a network.</p>
+<a class="header" href="#termination" id="termination"><h3>Termination</h3></a>
+<p>The execution of a flow terminates when there are no runnables left on the ready list</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
